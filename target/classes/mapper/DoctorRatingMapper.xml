@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunchuan.medical.mapper.DoctorRatingMapper">
+    
+    <resultMap id="ratingMap" type="DoctorRating">
+        <id property="id" column="id"/>
+        <result property="appointmentId" column="appointment_id"/>
+        <result property="doctorId" column="doctor_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="serviceAttitude" column="service_attitude"/>
+        <result property="medicalSkill" column="medical_skill"/>
+        <result property="medicalEffect" column="medical_effect"/>
+        <result property="comment" column="comment"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <resultMap id="ratingDTOMap" type="com.yunchuan.medical.dto.DoctorRatingDTO">
+        <id property="id" column="id"/>
+        <result property="appointmentId" column="appointment_id"/>
+        <result property="doctorId" column="doctor_id"/>
+        <result property="doctorName" column="doctor_name"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="serviceAttitude" column="service_attitude"/>
+        <result property="medicalSkill" column="medical_skill"/>
+        <result property="medicalEffect" column="medical_effect"/>
+        <result property="comment" column="comment"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <insert id="insert">
+        INSERT INTO doctor_rating (
+            id, appointment_id, doctor_id, user_id,
+            service_attitude, medical_skill, medical_effect, 
+            comment, create_time, update_time
+        ) VALUES (
+            #{id}, #{appointmentId}, #{doctorId}, #{userId},
+            #{serviceAttitude}, #{medicalSkill}, #{medicalEffect}, 
+            #{comment}, #{createTime}, #{updateTime}
+        )
+    </insert>
+    
+    <select id="selectByDoctorId" resultMap="ratingDTOMap">
+        SELECT 
+            r.*,
+            d.name as doctor_name,
+            u.name as user_name
+        FROM doctor_rating r
+        LEFT JOIN doctor d ON r.doctor_id = d.id
+        LEFT JOIN user u ON r.user_id = u.id
+        WHERE r.doctor_id = #{doctorId}
+        ORDER BY r.create_time DESC
+    </select>
+    
+    <select id="selectByUserId" resultMap="ratingDTOMap">
+        SELECT 
+            r.*,
+            d.name as doctor_name,
+            u.name as user_name
+        FROM doctor_rating r
+        LEFT JOIN doctor d ON r.doctor_id = d.id
+        LEFT JOIN user u ON r.user_id = u.id
+        WHERE r.user_id = #{userId}
+        ORDER BY r.create_time DESC
+    </select>
+</mapper> 

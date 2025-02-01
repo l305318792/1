@@ -1,0 +1,108 @@
+### 登录获取token
+POST http://localhost:8081/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### 获取科室列表
+GET http://localhost:8081/api/admin/departments
+Authorization: Bearer {{auth_token}}
+
+### 添加科室
+POST http://localhost:8081/api/admin/departments
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "name": "测试科室",
+  "introduction": "这是一个测试科室"
+}
+
+### 更新科室
+PUT http://localhost:8081/api/admin/departments/{{departmentId}}
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "name": "更新后的科室名称",
+  "introduction": "更新后的介绍"
+}
+
+### 删除科室
+DELETE http://localhost:8081/api/admin/departments/{{departmentId}}
+Authorization: Bearer {{auth_token}}
+
+### 医生-问诊管理接口测试
+
+### 获取问诊列表
+GET http://localhost:8080/doctor/consultations
+Content-Type: application/json
+Authorization: Bearer_doctor1
+
+### 获取问诊详情
+GET http://localhost:8080/doctor/consultations/1
+Content-Type: application/json
+Authorization: Bearer_doctor1
+
+### 开始问诊
+PUT http://localhost:8080/doctor/consultations/1/start
+Content-Type: application/json
+Authorization: Bearer_doctor1
+
+### 完成问诊
+PUT http://localhost:8080/doctor/consultations/1/complete
+Content-Type: application/json
+Authorization: Bearer_doctor1
+
+{
+    "diagnosis": "偏头痛",
+    "treatment": "建议多休息，避免熬夜，保持良好作息"
+}
+
+### 开具处方
+POST http://localhost:8080/doctor/consultations/1/prescriptions
+Content-Type: application/json
+Authorization: Bearer_doctor1
+
+{
+    "diagnosis": "偏头痛",
+    "medicines": [
+        {
+            "name": "布洛芬缓释胶囊",
+            "usage": "口服",
+            "dosage": "1次1粒",
+            "frequency": "每日2次",
+            "duration": "3天",
+            "quantity": 6
+        }
+    ],
+    "notes": "饭后服用，如有不适请及时就医"
+}
+
+### 查看处方
+GET http://localhost:8080/doctor/consultations/1/prescriptions
+Content-Type: application/json
+Authorization: Bearer_doctor1
+
+### 修改处方
+PUT http://localhost:8080/doctor/consultations/1/prescriptions/1
+Content-Type: application/json
+Authorization: Bearer_doctor1
+
+{
+    "diagnosis": "偏头痛",
+    "medicines": [
+        {
+            "name": "布洛芬缓释胶囊",
+            "usage": "口服",
+            "dosage": "1次1粒",
+            "frequency": "每日3次",
+            "duration": "3天",
+            "quantity": 9
+        }
+    ],
+    "notes": "饭后服用，如有不适请及时就医。建议增加服用频次。"
+} 

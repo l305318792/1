@@ -1,0 +1,329 @@
+{
+    "info": {
+        "_postman_id": "doctor-management",
+        "name": "医生功能管理",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "个人信息管理",
+            "item": [
+                {
+                    "name": "获取个人信息",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_doctor1"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/doctor/profile",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["doctor", "profile"]
+                        }
+                    }
+                },
+                {
+                    "name": "更新个人信息",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_doctor1"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"张医生\",\n    \"title\": \"主任医师\",\n    \"specialty\": \"内科疾病诊治\",\n    \"introduction\": \"从事内科临床工作20年，擅长各类内科疾病的诊断和治疗\",\n    \"phone\": \"13900139001\",\n    \"email\": \"doctor1@example.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/doctor/profile",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["doctor", "profile"]
+                        }
+                    }
+                },
+                {
+                    "name": "更新头像",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_doctor1"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"avatarUrl\": \"http://example.com/avatars/doctor1.jpg\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/doctor/profile/avatar",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["doctor", "profile", "avatar"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "排班管理",
+            "item": [
+                {
+                    "name": "获取排班列表",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_doctor1"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/doctor/schedules",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["doctor", "schedules"]
+                        }
+                    }
+                },
+                {
+                    "name": "更新排班",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_doctor1"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"scheduleDate\": \"2024-01-28\",\n    \"period\": \"MORNING\",\n    \"maxAppointments\": 10,\n    \"remark\": \"上午门诊\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/doctor/schedules/1",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["doctor", "schedules", "1"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "问诊管理",
+            "item": [
+                {
+                    "name": "获取问诊列表",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_doctor1"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/doctor/consultations",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["doctor", "consultations"]
+                        }
+                    }
+                },
+                {
+                    "name": "获取问诊详情",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_doctor1"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/doctor/consultations/1",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["doctor", "consultations", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "开始问诊",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_doctor1"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/doctor/consultations/1/start",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["doctor", "consultations", "1", "start"]
+                        }
+                    }
+                },
+                {
+                    "name": "完成问诊",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_doctor1"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"diagnosis\": \"偏头痛\",\n    \"treatment\": \"1. 建议规律作息，避免熬夜\\n2. 保持良好心情，避免压力过大\\n3. 必要时服用止痛药物\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/doctor/consultations/1/complete",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["doctor", "consultations", "1", "complete"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "处方管理",
+            "item": [
+                {
+                    "name": "开具处方",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_doctor1"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"diagnosis\": \"偏头痛\",\n    \"medicines\": [\n        {\n            \"name\": \"布洛芬缓释胶囊\",\n            \"usage\": \"口服\",\n            \"dosage\": \"1次1粒\",\n            \"frequency\": \"每日2次\",\n            \"duration\": \"3天\",\n            \"quantity\": 6\n        }\n    ],\n    \"notes\": \"1. 按时服药\\n2. 注意用药后的不良反应\\n3. 如症状加重请及时就医\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/doctor/consultations/1/prescriptions",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["doctor", "consultations", "1", "prescriptions"]
+                        }
+                    }
+                },
+                {
+                    "name": "查看处方",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_doctor1"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/doctor/consultations/1/prescriptions",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["doctor", "consultations", "1", "prescriptions"]
+                        }
+                    }
+                },
+                {
+                    "name": "修改处方",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_doctor1"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"medicines\": [\n        {\n            \"name\": \"布洛芬缓释胶囊\",\n            \"usage\": \"口服\",\n            \"dosage\": \"1次1粒\",\n            \"frequency\": \"每日3次\",\n            \"duration\": \"5天\",\n            \"quantity\": 15\n        }\n    ],\n    \"notes\": \"1. 按时服药\\n2. 注意用药后的不良反应\\n3. 如症状加重请立即就医\\n4. 避免剧烈运动\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/doctor/consultations/1/prescriptions/1",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["doctor", "consultations", "1", "prescriptions", "1"]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+} 

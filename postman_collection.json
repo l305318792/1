@@ -1,0 +1,182 @@
+{
+	"info": {
+		"_postman_id": "medical-consultation",
+		"name": "医生问诊管理",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "获取问诊列表",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer_doctor1"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/doctor/consultations",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["doctor", "consultations"]
+				}
+			}
+		},
+		{
+			"name": "获取问诊详情",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer_doctor1"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/doctor/consultations/1",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["doctor", "consultations", "1"]
+				}
+			}
+		},
+		{
+			"name": "开始问诊",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer_doctor1"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/doctor/consultations/1/start",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["doctor", "consultations", "1", "start"]
+				}
+			}
+		},
+		{
+			"name": "完成问诊",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer_doctor1"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"diagnosis\": \"偏头痛\",\n    \"treatment\": \"建议多休息，避免熬夜，保持良好作息\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/doctor/consultations/1/complete",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["doctor", "consultations", "1", "complete"]
+				}
+			}
+		},
+		{
+			"name": "开具处方",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer_doctor1"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"diagnosis\": \"偏头痛\",\n    \"medicines\": [\n        {\n            \"name\": \"布洛芬缓释胶囊\",\n            \"usage\": \"口服\",\n            \"dosage\": \"1次1粒\",\n            \"frequency\": \"每日2次\",\n            \"duration\": \"3天\",\n            \"quantity\": 6\n        }\n    ],\n    \"notes\": \"饭后服用，如有不适请及时就医\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/doctor/consultations/1/prescriptions",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["doctor", "consultations", "1", "prescriptions"]
+				}
+			}
+		},
+		{
+			"name": "查看处方",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer_doctor1"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/doctor/consultations/1/prescriptions",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["doctor", "consultations", "1", "prescriptions"]
+				}
+			}
+		},
+		{
+			"name": "修改处方",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer_doctor1"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"diagnosis\": \"偏头痛\",\n    \"medicines\": [\n        {\n            \"name\": \"布洛芬缓释胶囊\",\n            \"usage\": \"口服\",\n            \"dosage\": \"1次1粒\",\n            \"frequency\": \"每日3次\",\n            \"duration\": \"3天\",\n            \"quantity\": 9\n        }\n    ],\n    \"notes\": \"饭后服用，如有不适请及时就医。建议增加服用频次。\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/doctor/consultations/1/prescriptions/1",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["doctor", "consultations", "1", "prescriptions", "1"]
+				}
+			}
+		}
+	]
+} 

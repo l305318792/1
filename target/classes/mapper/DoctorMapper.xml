@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunchuan.medical.mapper.DoctorMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yunchuan.medical.entity.Doctor">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="department_id" property="departmentId" />
+        <result column="title" property="title" />
+        <result column="specialty" property="specialty" />
+        <result column="introduction" property="introduction" />
+        <result column="status" property="status" />
+        <result column="average_rating" property="averageRating" />
+        <result column="rating_count" property="ratingCount" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, department_id, title, specialty, introduction, status, average_rating, rating_count, create_time, update_time
+    </sql>
+
+</mapper>

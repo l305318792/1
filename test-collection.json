@@ -1,0 +1,124 @@
+{
+    "info": {
+        "name": "医疗平台测试集合",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "1. 用户认证",
+            "item": [
+                {
+                    "name": "登录",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.code === 200) {",
+                                    "    pm.environment.set('token', jsonData.data.token);",
+                                    "    pm.test('登录成功', function() {",
+                                    "        pm.expect(jsonData.data.token).to.not.be.empty;",
+                                    "    });",
+                                    "} else {",
+                                    "    pm.test('登录失败', function() {",
+                                    "        pm.expect(jsonData.code).to.equal(200);",
+                                    "    });",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"123456\"\n}"
+                        },
+                        "url": "http://localhost:8080/auth/login"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "2. 科室管理",
+            "item": [
+                {
+                    "name": "获取科室列表",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "pm.test('获取科室列表成功', function() {",
+                                    "    pm.expect(jsonData.code).to.equal(200);",
+                                    "    pm.expect(jsonData.data).to.be.an('array');",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": "http://localhost:8080/department/list"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "3. 预约管理",
+            "item": [
+                {
+                    "name": "创建预约",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "pm.test('创建预约成功', function() {",
+                                    "    pm.expect(jsonData.code).to.equal(200);",
+                                    "    if (jsonData.code !== 200) {",
+                                    "        console.log('错误信息:', jsonData.message);",
+                                    "    }",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"doctorId\": \"1\",\n    \"patientId\": \"1\",\n    \"appointmentTime\": \"2024-02-01 09:00:00\",\n    \"description\": \"测试预约\"\n}"
+                        },
+                        "url": "http://localhost:8080/appointment"
+                    }
+                }
+            ]
+        }
+    ]
+} 

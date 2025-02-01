@@ -1,0 +1,220 @@
+{
+    "info": {
+        "name": "医疗平台测试集合(详细版)",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "1. 用户认证",
+            "item": [
+                {
+                    "name": "登录测试",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "// 打印请求信息",
+                                    "console.log('=== 请求信息 ===');",
+                                    "console.log('URL:', pm.request.url.toString());",
+                                    "console.log('请求参数:', pm.request.body.raw);",
+                                    "",
+                                    "// 解析响应",
+                                    "var jsonData = pm.response.json();",
+                                    "",
+                                    "console.log('\\n=== 响应信息 ===');",
+                                    "console.log('HTTP状态:', pm.response.status);",
+                                    "console.log('响应时间:', pm.response.responseTime + 'ms');",
+                                    "console.log('响应大小:', pm.response.size().body + ' bytes');",
+                                    "",
+                                    "// 详细的响应检查",
+                                    "pm.test('1. 响应格式检查', function() {",
+                                    "    try {",
+                                    "        pm.expect(jsonData).to.be.an('object');",
+                                    "        pm.expect(jsonData).to.have.property('code');",
+                                    "        pm.expect(jsonData).to.have.property('message');",
+                                    "        pm.expect(jsonData).to.have.property('data');",
+                                    "        console.log('✓ 响应格式正确');",
+                                    "    } catch (e) {",
+                                    "        console.log('❌ 响应格式错误:', e.message);",
+                                    "        throw e;",
+                                    "    }",
+                                    "});",
+                                    "",
+                                    "// 检查业务状态码",
+                                    "pm.test('2. 业务状态检查', function() {",
+                                    "    console.log('业务状态码:', jsonData.code);",
+                                    "    console.log('业务消息:', jsonData.message);",
+                                    "    if (jsonData.code !== 200) {",
+                                    "        console.log('❌ 业务错误详情:', {",
+                                    "            code: jsonData.code,",
+                                    "            message: jsonData.message,",
+                                    "            data: jsonData.data",
+                                    "        });",
+                                    "        throw new Error('业务状态码错误');",
+                                    "    } else {",
+                                    "        console.log('✓ 业务状态正常');",
+                                    "    }",
+                                    "});",
+                                    "",
+                                    "// 检查登录数据",
+                                    "pm.test('3. 登录数据检查', function() {",
+                                    "    if (jsonData.code === 200) {",
+                                    "        console.log('\\n=== 登录数据 ===');",
+                                    "        if (jsonData.data && jsonData.data.token) {",
+                                    "            console.log('✓ Token已生成:', jsonData.data.token.substring(0, 20) + '...');",
+                                    "            pm.environment.set('token', jsonData.data.token);",
+                                    "            console.log('✓ Token已保存到环境变量');",
+                                    "        } else {",
+                                    "            console.log('❌ Token未生成');",
+                                    "            throw new Error('登录成功但未返回token');",
+                                    "        }",
+                                    "        ",
+                                    "        // 打印用户信息（如果有）",
+                                    "        if (jsonData.data.user) {",
+                                    "            console.log('用户信息:', {",
+                                    "                id: jsonData.data.user.id,",
+                                    "                username: jsonData.data.user.username,",
+                                    "                role: jsonData.data.user.role",
+                                    "            });",
+                                    "        }",
+                                    "    }",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"123456\"\n}"
+                        },
+                        "url": "http://localhost:8080/auth/login"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "2. 科室管理",
+            "item": [
+                {
+                    "name": "获取科室列表",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "// 打印请求信息",
+                                    "console.log('=== 请求信息 ===');",
+                                    "console.log('URL:', pm.request.url.toString());",
+                                    "console.log('Authorization:', pm.request.headers.get('Authorization'));",
+                                    "",
+                                    "try {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    console.log('\\n=== 原始响应数据 ===');",
+                                    "    console.log(JSON.stringify(jsonData, null, 2));",
+                                    "} catch (e) {",
+                                    "    console.log('❌ 响应解析错误:', e.message);",
+                                    "    console.log('原始响应:', pm.response.text());",
+                                    "    throw e;",
+                                    "}",
+                                    "",
+                                    "console.log('\\n=== 响应信息 ===');",
+                                    "console.log('HTTP状态:', pm.response.status);",
+                                    "console.log('响应时间:', pm.response.responseTime + 'ms');",
+                                    "console.log('响应大小:', pm.response.size().body + ' bytes');",
+                                    "",
+                                    "// 检查HTTP状态码",
+                                    "pm.test('1. HTTP状态检查', function() {",
+                                    "    try {",
+                                    "        pm.response.to.have.status(200);",
+                                    "        console.log('✓ HTTP状态正常');",
+                                    "    } catch (e) {",
+                                    "        console.log('❌ HTTP错误:', pm.response.status);",
+                                    "        throw e;",
+                                    "    }",
+                                    "});",
+                                    "",
+                                    "// 检查响应格式",
+                                    "pm.test('2. 响应格式检查', function() {",
+                                    "    try {",
+                                    "        pm.expect(jsonData).to.be.an('object');",
+                                    "        pm.expect(jsonData).to.have.property('code');",
+                                    "        pm.expect(jsonData).to.have.property('data');",
+                                    "        console.log('✓ 响应格式正确');",
+                                    "        console.log('响应对象属性:', Object.keys(jsonData));",
+                                    "    } catch (e) {",
+                                    "        console.log('❌ 响应格式错误:', e.message);",
+                                    "        throw e;",
+                                    "    }",
+                                    "});",
+                                    "",
+                                    "// 检查业务状态",
+                                    "pm.test('3. 业务状态检查', function() {",
+                                    "    console.log('\\n=== 业务状态 ===');",
+                                    "    console.log('业务状态码:', jsonData.code);",
+                                    "    console.log('业务消息:', jsonData.message);",
+                                    "    console.log('完整响应:', JSON.stringify(jsonData, null, 2));",
+                                    "    ",
+                                    "    if (jsonData.code !== 200) {",
+                                    "        console.log('❌ 业务错误:', {",
+                                    "            code: jsonData.code,",
+                                    "            message: jsonData.message,",
+                                    "            data: jsonData.data",
+                                    "        });",
+                                    "        throw new Error(`业务状态码错误: ${jsonData.code}, 消息: ${jsonData.message}`);",
+                                    "    } else {",
+                                    "        console.log('✓ 业务状态正常');",
+                                    "    }",
+                                    "});",
+                                    "",
+                                    "// 检查数据内容",
+                                    "if (jsonData.code === 200) {",
+                                    "    pm.test('4. 数据内容检查', function() {",
+                                    "        console.log('\\n=== 数据内容 ===');",
+                                    "        pm.expect(jsonData.data).to.be.an('array');",
+                                    "        console.log('总记录数:', jsonData.data.length);",
+                                    "",
+                                    "        if (jsonData.data.length === 0) {",
+                                    "            console.log('⚠️ 警告: 科室列表为空');",
+                                    "        } else {",
+                                    "            console.log('数据预览 (前3条):');",
+                                    "            jsonData.data.slice(0, 3).forEach((dept, index) => {",
+                                    "                console.log(`[${index + 1}] ID: ${dept.id}, 名称: ${dept.name}, 描述: ${dept.description || '无'}`);",
+                                    "            });",
+                                    "",
+                                    "            // 数据完整性检查",
+                                    "            jsonData.data.forEach((dept, index) => {",
+                                    "                if (!dept.id || !dept.name) {",
+                                    "                    console.log(`⚠️ 警告: 第${index + 1}条数据缺少必要字段`);",
+                                    "                }",
+                                    "            });",
+                                    "        }",
+                                    "    });",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": "http://localhost:8080/department/list"
+                    }
+                }
+            ]
+        }
+    ]
+} 

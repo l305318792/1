@@ -1,0 +1,28 @@
+package com.yunchuan.medical.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.yunchuan.medical.entity.Consultation;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import java.util.List;
+
+/**
+ * 问诊记录数据访问接口
+ */
+@Mapper
+public interface ConsultationMapper extends BaseMapper<Consultation> {
+    /**
+     * 根据医生ID查询问诊记录
+     */
+    List<Consultation> selectByDoctorId(@Param("doctorId") String doctorId);
+
+    /**
+     * 根据用户ID查询问诊记录
+     */
+    List<Consultation> selectByUserId(@Param("userId") String userId);
+
+    /**
+     * 根据状态查询问诊记录
+     */
+    List<Consultation> selectByStatus(@Param("status") String status);
+} 

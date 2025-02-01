@@ -1,0 +1,498 @@
+{
+    "info": {
+        "_postman_id": "admin-management",
+        "name": "管理员功能管理",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "用户管理",
+            "item": [
+                {
+                    "name": "获取用户列表",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/admin/users",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "users"]
+                        }
+                    }
+                },
+                {
+                    "name": "创建用户",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"username\": \"test_user\",\n    \"password\": \"123456\",\n    \"name\": \"测试用户\",\n    \"role\": \"USER\",\n    \"phone\": \"13800138001\",\n    \"email\": \"test@example.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/admin/users",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "users"]
+                        }
+                    }
+                },
+                {
+                    "name": "更新用户",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"更新后的用户名\",\n    \"phone\": \"13800138002\",\n    \"email\": \"updated@example.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/admin/users/1",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "users", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "删除用户",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/admin/users/1",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "users", "1"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "预约管理",
+            "item": [
+                {
+                    "name": "获取预约列表",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/admin/appointments",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "appointments"]
+                        }
+                    }
+                },
+                {
+                    "name": "获取预约统计",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/admin/appointments/statistics",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "appointments", "statistics"]
+                        }
+                    }
+                },
+                {
+                    "name": "审核预约",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"action\": \"APPROVE\",\n    \"reason\": \"预约信息完整，符合要求\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/admin/appointments/1/review",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "appointments", "1", "review"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "财务管理",
+            "item": [
+                {
+                    "name": "获取收入列表",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/admin/finances/incomes",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "finances", "incomes"]
+                        }
+                    }
+                },
+                {
+                    "name": "获取退款列表",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/admin/finances/refunds",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "finances", "refunds"]
+                        }
+                    }
+                },
+                {
+                    "name": "获取财务统计",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/admin/finances/statistics",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "finances", "statistics"]
+                        }
+                    }
+                },
+                {
+                    "name": "审核退款",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"action\": \"APPROVE\",\n    \"reason\": \"退款申请合理，同意退款\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/admin/finances/refunds/1/review",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "finances", "refunds", "1", "review"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "内容管理",
+            "item": [
+                {
+                    "name": "获取公告列表",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/admin/announcements",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "announcements"]
+                        }
+                    }
+                },
+                {
+                    "name": "创建公告",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"系统维护通知\",\n    \"content\": \"系统将于2024年1月28日凌晨2点进行维护升级\",\n    \"type\": \"SYSTEM\",\n    \"status\": \"DRAFT\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/admin/announcements",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "announcements"]
+                        }
+                    }
+                },
+                {
+                    "name": "更新公告",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"系统维护通知（已更新）\",\n    \"content\": \"系统维护时间调整为2024年1月29日凌晨2点\",\n    \"status\": \"PUBLISHED\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/admin/announcements/1",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "announcements", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "删除公告",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/admin/announcements/1",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "announcements", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "获取文章列表",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/admin/articles",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "articles"]
+                        }
+                    }
+                },
+                {
+                    "name": "创建文章",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"冬季养生指南\",\n    \"content\": \"冬季养生要注意保暖...\",\n    \"category\": \"HEALTH_TIPS\",\n    \"tags\": [\"养生\", \"冬季\", \"保健\"],\n    \"status\": \"DRAFT\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/admin/articles",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "articles"]
+                        }
+                    }
+                },
+                {
+                    "name": "更新文章",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"冬季养生指南（已更新）\",\n    \"content\": \"冬季养生要注意保暖，合理饮食...\",\n    \"status\": \"PUBLISHED\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/admin/articles/1",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "articles", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "删除文章",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer_admin"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/admin/articles/1",
+                            "protocol": "http",
+                            "host": ["localhost"],
+                            "port": "8080",
+                            "path": ["admin", "articles", "1"]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+} 

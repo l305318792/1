@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunchuan.medical.mapper.PrescriptionMapper">
+
+    <resultMap id="BaseResultMap" type="com.yunchuan.medical.entity.Prescription">
+        <id column="id" property="id"/>
+        <result column="consultation_id" property="consultationId"/>
+        <result column="doctor_id" property="doctorId"/>
+        <result column="patient_id" property="patientId"/>
+        <result column="diagnosis" property="diagnosis"/>
+        <result column="medications" property="medications"/>
+        <result column="dosage" property="dosage"/>
+        <result column="instructions" property="instructions"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, consultation_id, doctor_id, patient_id, diagnosis, medications, dosage, instructions,
+        status, create_time, update_time
+    </sql>
+
+    <select id="selectByConsultationId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM prescription
+        WHERE consultation_id = #{consultationId}
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM prescription
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM prescription
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.yunchuan.medical.entity.Prescription">
+        INSERT INTO prescription (
+            id, consultation_id, doctor_id, patient_id, diagnosis, medications,
+            dosage, instructions, status, create_time, update_time
+        )
+        VALUES (
+            #{id}, #{consultationId}, #{doctorId}, #{patientId}, #{diagnosis}, #{medications},
+            #{dosage}, #{instructions}, #{status}, #{createTime}, #{updateTime}
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.yunchuan.medical.entity.Prescription">
+        UPDATE prescription
+        SET consultation_id = #{consultationId},
+            doctor_id = #{doctorId},
+            patient_id = #{patientId},
+            diagnosis = #{diagnosis},
+            medications = #{medications},
+            dosage = #{dosage},
+            instructions = #{instructions},
+            status = #{status},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM prescription WHERE id = #{id}
+    </delete>
+
+</mapper> 

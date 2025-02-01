@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunchuan.medical.mapper.AppointmentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yunchuan.medical.entity.Appointment">
+        <id column="id" property="id" />
+        <result column="schedule_id" property="scheduleId" />
+        <result column="user_id" property="userId" />
+        <result column="doctor_id" property="doctorId" />
+        <result column="department_id" property="departmentId" />
+        <result column="sequence_number" property="sequenceNumber" />
+        <result column="status" property="status" />
+        <result column="cancel_reason" property="cancelReason" />
+        <result column="visit_time" property="visitTime" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, schedule_id, user_id, doctor_id, department_id, sequence_number, status, cancel_reason, visit_time, create_time, update_time
+    </sql>
+
+    <!-- 根据ID查询预约详情 -->
+    <select id="selectDetailById" resultType="com.yunchuan.medical.dto.AppointmentDetailDTO">
+        SELECT 
+            a.id,
+            a.schedule_id,
+            a.user_id,
+            a.doctor_id,
+            a.department_id,
+            a.sequence_number,
+            a.status,
+            a.cancel_reason,
+            a.visit_time,
+            a.create_time,
+            a.update_time,
+            d.name as doctor_name,
+            dp.name as department_name
+        FROM appointment a
+        LEFT JOIN doctor d ON a.doctor_id = d.id
+        LEFT JOIN department dp ON a.department_id = dp.id
+        WHERE a.id = #{id}
+    </select>
+</mapper>

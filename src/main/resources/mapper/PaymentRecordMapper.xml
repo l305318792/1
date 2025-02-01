@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunchuan.medical.mapper.PaymentRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.yunchuan.medical.entity.PaymentRecord">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="business_id" property="businessId"/>
+        <result column="business_type" property="businessType"/>
+        <result column="amount" property="amount"/>
+        <result column="payment_method" property="paymentMethod"/>
+        <result column="payment_time" property="paymentTime"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_id, business_id, business_type, amount, payment_method,
+        payment_time, status, remark, create_time, update_time
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM payment_record
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM payment_record
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM payment_record
+        ORDER BY create_time DESC
+    </select>
+
+    <insert id="insert" parameterType="com.yunchuan.medical.entity.PaymentRecord">
+        INSERT INTO payment_record (
+            id, user_id, business_id, business_type, amount, payment_method,
+            payment_time, status, remark, create_time, update_time
+        )
+        VALUES (
+            #{id}, #{userId}, #{businessId}, #{businessType}, #{amount}, #{paymentMethod},
+            #{paymentTime}, #{status}, #{remark}, #{createTime}, #{updateTime}
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.yunchuan.medical.entity.PaymentRecord">
+        UPDATE payment_record
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="businessId != null">business_id = #{businessId},</if>
+            <if test="businessType != null">business_type = #{businessType},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
+            <if test="paymentTime != null">payment_time = #{paymentTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateTime != null">update_time = #{updateTime}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM payment_record WHERE id = #{id}
+    </delete>
+
+    <update id="updateStatus">
+        UPDATE payment_record
+        SET status = #{status},
+            update_time = NOW(),
+            payment_time = CASE WHEN #{status} = 'success' THEN NOW() ELSE payment_time END
+        WHERE id = #{id}
+    </update>
+
+</mapper> 

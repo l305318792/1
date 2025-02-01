@@ -1,0 +1,61 @@
+### 登录接口
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123456"
+}
+
+### 获取科室下拉列表
+GET http://localhost:8080/common/departments/select
+
+### 获取科室下的医生列表
+GET http://localhost:8080/common/doctors/select?departmentId=1
+
+### 获取医生列表（管理员）
+GET http://localhost:8080/admin/doctors
+Authorization: Bearer {{auth_token}}
+
+### 获取科室列表（管理员）
+GET http://localhost:8080/admin/departments
+Authorization: Bearer {{auth_token}}
+
+### 获取排班列表（管理员）
+GET http://localhost:8080/admin/schedules
+Authorization: Bearer {{auth_token}}
+
+### 创建预约
+POST http://localhost:8080/appointments
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "scheduleId": "1"
+}
+
+### 获取我的预约列表
+GET http://localhost:8080/appointments/my
+Authorization: Bearer {{auth_token}}
+
+### 取消预约
+POST http://localhost:8080/appointments/1/cancel
+Authorization: Bearer {{auth_token}}
+
+### 创建医生评价
+POST http://localhost:8080/ratings
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "doctorId": "1",
+  "rating": 5,
+  "content": "医生很专业"
+}
+
+### 获取医生评价列表
+GET http://localhost:8080/ratings/doctor/1
+
+### 获取我的评价列表
+GET http://localhost:8080/ratings/my
+Authorization: Bearer {{auth_token}} 
