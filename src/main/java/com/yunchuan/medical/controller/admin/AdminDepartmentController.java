@@ -42,6 +42,9 @@ public class AdminDepartmentController {
                             .name(dept.getName())
                             .parentId(dept.getParentId())
                             .introduction(dept.getIntroduction())
+                            .status(dept.getStatus())
+                            .createTime(dept.getCreateTime())
+                            .updateTime(dept.getUpdateTime())
                             .build();
                     return dto;
                 })
@@ -90,6 +93,9 @@ public class AdminDepartmentController {
                 .name(department.getName())
                 .parentId(department.getParentId())
                 .introduction(department.getIntroduction())
+                .status(department.getStatus())
+                .createTime(department.getCreateTime())
+                .updateTime(department.getUpdateTime())
                 .build();
         return Result.success(dto);
     }
@@ -131,5 +137,21 @@ public class AdminDepartmentController {
     public Result<Void> deleteDepartment(@PathVariable String id) {
         boolean success = departmentService.removeById(id);
         return success ? Result.success() : Result.error("删除科室失败");
+    }
+
+    /**
+     * 更新科室状态
+     */
+    @Operation(summary = "更新科室状态")
+    @PutMapping("/{id}/status")
+    public Result<Void> updateDepartmentStatus(@PathVariable String id, @RequestParam String status) {
+        Department department = departmentService.getById(id);
+        if (department == null) {
+            return Result.error("科室不存在");
+        }
+        department.setStatus(status);
+        department.setUpdateTime(LocalDateTime.now());
+        boolean success = departmentService.updateById(department);
+        return success ? Result.success() : Result.error("更新科室状态失败");
     }
 } 

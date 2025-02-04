@@ -34,10 +34,22 @@ public class Doctor implements Serializable {
     private String id;
 
     /**
+     * 用户ID
+     */
+    @TableField("user_id")
+    private String userId;
+
+    /**
      * 医生姓名
      */
     @TableField("name")
     private String name;
+
+    /**
+     * 手机号
+     */
+    @TableField("phone")
+    private String phone;
 
     /**
      * 科室ID
@@ -64,22 +76,40 @@ public class Doctor implements Serializable {
     private String introduction;
 
     /**
-     * 状态
+     * 问诊费用
      */
-    @TableField("status")
-    private String status;
+    @TableField("consultation_fee")
+    private BigDecimal consultationFee;
 
     /**
-     * 平均评分
+     * 评分
      */
-    @TableField("average_rating")
-    private BigDecimal averageRating = new BigDecimal("5.0");
+    @TableField("rating")
+    private BigDecimal rating = new BigDecimal("5.0");
 
     /**
      * 评分次数
      */
     @TableField("rating_count")
     private Integer ratingCount = 0;
+
+    /**
+     * 状态
+     */
+    @TableField("status")
+    private Integer status = 1;
+
+    /**
+     * 问诊次数
+     */
+    @TableField("consult_count")
+    private Integer consultCount = 0;
+
+    /**
+     * 预约次数
+     */
+    @TableField("appointment_count")
+    private Integer appointmentCount = 0;
 
     /**
      * 创建时间

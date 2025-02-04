@@ -54,6 +54,17 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Override
     public ConsultationDTO createConsultation(ConsultationDTO consultationDTO) {
+        // 验证医生ID和科室ID是否存在
+        Doctor doctor = doctorService.getById(consultationDTO.getDoctorId());
+        if (doctor == null) {
+            throw new BusinessException("医生不存在");
+        }
+        
+        Department department = departmentService.getById(consultationDTO.getDepartmentId());
+        if (department == null) {
+            throw new BusinessException("科室不存在");
+        }
+        
         Consultation consultation = new Consultation();
         BeanUtils.copyProperties(consultationDTO, consultation);
         consultation.setId(UUID.randomUUID().toString().replace("-", ""));
@@ -88,21 +99,39 @@ public class ConsultationServiceImpl implements ConsultationService {
         BeanUtils.copyProperties(consultation, dto);
         
         // 获取医生信息
+        log.info("开始获取医生信息 - 医生ID: {}", consultation.getDoctorId());
         Doctor doctor = doctorService.getById(consultation.getDoctorId());
         if (doctor != null) {
-            dto.setDoctorName(doctor.getName());
+            log.info("找到医生信息: {}", doctor);
+            User doctorUser = userService.getById(doctor.getUserId());
+            if (doctorUser != null) {
+                log.info("找到医生用户信息: {}", doctorUser);
+                dto.setDoctorName(doctorUser.getName());
+            } else {
+                log.warn("未找到医生用户信息 - 用户ID: {}", doctor.getUserId());
+            }
+        } else {
+            log.warn("未找到医生信息 - 医生ID: {}", consultation.getDoctorId());
         }
         
         // 获取科室信息
+        log.info("开始获取科室信息 - 科室ID: {}", consultation.getDepartmentId());
         Department department = departmentService.getById(consultation.getDepartmentId());
         if (department != null) {
+            log.info("找到科室信息: {}", department);
             dto.setDepartmentName(department.getName());
+        } else {
+            log.warn("未找到科室信息 - 科室ID: {}", consultation.getDepartmentId());
         }
         
         // 获取用户信息
+        log.info("开始获取用户信息 - 用户ID: {}", consultation.getUserId());
         User user = userService.getById(consultation.getUserId());
         if (user != null) {
+            log.info("找到用户信息: {}", user);
             dto.setUserName(user.getName());
+        } else {
+            log.warn("未找到用户信息 - 用户ID: {}", consultation.getUserId());
         }
         
         return dto;
@@ -211,5 +240,13 @@ public class ConsultationServiceImpl implements ConsultationService {
             log.error("创建处方失败: ", e);
             throw new BusinessException(500, "创建处方失败: " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<ConsultationDTO> getConsultationListByUserId(String userId) {
+        List<Consultation> consultations = consultationMapper.selectByUserId(userId);
+        return consultations.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 } 

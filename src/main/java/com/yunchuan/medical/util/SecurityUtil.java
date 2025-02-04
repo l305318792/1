@@ -17,8 +17,8 @@ public class SecurityUtil {
      * 获取当前用户ID
      */
     public static String getCurrentUserId() {
-        // TODO: 实际项目中应该从SecurityContext中获取
-        return "user_001";
+        User user = getCurrentUser();
+        return user.getId();
     }
     
     /**
@@ -40,19 +40,12 @@ public class SecurityUtil {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalStateException("用户未登录");
         }
-        String name = authentication.getName();
-        // 处理 Bearer_ 前缀
-        if (name.startsWith("Bearer_")) {
-            name = name.substring(7);
+        
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails) principal).getUser();
         }
-        if ("admin".equals(name)) {
-            User user = new User();
-            user.setId("1");
-            user.setUsername("admin");
-            user.setName("管理员");
-            user.setRole("ADMIN");
-            return user;
-        }
-        throw new IllegalStateException("无效的用户");
+        
+        throw new IllegalStateException("无效的用户认证信息");
     }
 } 

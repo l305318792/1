@@ -61,6 +61,16 @@ public class AppointmentController {
     }
 
     /**
+     * 完成预约
+     */
+    @Operation(summary = "完成预约")
+    @PostMapping("/{id}/complete")
+    @PreAuthorize("hasRole('USER')")
+    public Result<AppointmentDTO> completeAppointment(@PathVariable String id) {
+        return Result.ok(appointmentService.updateAppointmentStatus(id, "COMPLETED", null));
+    }
+
+    /**
      * 获取预约详情
      */
     @Operation(summary = "获取预约详情")

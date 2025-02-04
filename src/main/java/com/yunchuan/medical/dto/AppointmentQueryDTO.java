@@ -39,4 +39,14 @@ public class AppointmentQueryDTO {
      * 状态
      */
     private String status;
+
+    /**
+     * 当前页码
+     */
+    private Integer current = 1;
+    
+    /**
+     * 每页大小
+     */
+    private Integer size = 10;
 } 

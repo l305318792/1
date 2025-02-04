@@ -64,6 +64,12 @@ public class Appointment implements Serializable {
     private String cancelReason;
 
     /**
+     * 审核原因
+     */
+    @TableField("review_reason")
+    private String reviewReason;
+
+    /**
      * 就诊时间
      */
     @TableField("visit_time")

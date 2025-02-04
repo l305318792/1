@@ -59,12 +59,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (!isPublicUrl) {
                 String token = getTokenFromRequest(request);
                 if (StringUtils.hasText(token)) {
-                    // 简单的 token 认证，如果是 "admin"，则认为是管理员
-                    if ("admin".equals(token)) {
-                        UserDetails userDetails = userDetailsService.loadUserByUsername("admin");
-                        UsernamePasswordAuthenticationToken authentication = 
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    String username = jwtUtil.getUsernameFromToken(token);
+                    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                        if (jwtUtil.validateToken(token, userDetails)) {
+                            UsernamePasswordAuthenticationToken authentication = 
+                                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                            SecurityContextHolder.getContext().setAuthentication(authentication);
+                            logger.info("认证成功，用户：{}，权限：{}", username, userDetails.getAuthorities());
+                        }
                     }
                 }
             }

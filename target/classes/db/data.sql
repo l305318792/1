@@ -35,10 +35,10 @@ SET FOREIGN_KEY_CHECKS=1;
 
 -- 插入管理员用户
 INSERT INTO user (id, username, password, name, phone, email, role, status, create_time, update_time) VALUES
-('u1', 'admin', '$2a$10$x6xqFZ4JOT0vxKtAQESbPu', '管理', '13800000000', 'admin@medical.com', 'ADMIN', 'ENABLED', NOW(), NOW()),
-('u2', 'doctor1', '$2a$10$x6xqFZ4JOT0vxKtAQESbPu', '张医', '13800000001', 'doctor1@medical.com', 'DOCTOR', 'ENABLED', NOW(), NOW()),
-('u3', 'doctor2', '$2a$10$x6xqFZ4JOT0vxKtAQESbPu', '李医', '13800000002', 'doctor2@medical.com', 'DOCTOR', 'ENABLED', NOW(), NOW()),
-('u4', 'patient1', '$2a$10$x6xqFZ4JOT0vxKtAQESbPu', '王患', '13800000003', 'patient1@medical.com', 'PATIENT', 'ENABLED', NOW(), NOW());
+('u1', 'admin', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '管理', '13800000000', 'admin@medical.com', 'ADMIN', 'ENABLED', NOW(), NOW()),
+('u2', 'doctor1', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '张医', '13800000001', 'doctor1@medical.com', 'DOCTOR', 'ENABLED', NOW(), NOW()),
+('u3', 'doctor2', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '李医', '13800000002', 'doctor2@medical.com', 'DOCTOR', 'ENABLED', NOW(), NOW()),
+('u4', 'patient1', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '王患', '13800000003', 'patient1@medical.com', 'PATIENT', 'ENABLED', NOW(), NOW());
 
 -- 插入科室数据
 INSERT INTO department (id, name, parent_id, introduction, status, create_time, update_time) VALUES

@@ -9,7 +9,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/medical_consultation?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/medical?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     hikari:
@@ -92,21 +92,24 @@ mybatis-plus:
 
 jwt:
   header: Authorization
-  secret: your_jwt_secret_key_must_be_very_long_and_secure_123456789
-  expiration: 86400000  # 24小时
+  secret: eW91cl9qd3Rfc2VjcmV0X2tleV9tdXN0X2JlX3ZlcnlfbG9uZ19hbmRfc2VjdXJlXzEyMzQ1Njc4OQ==
+  expiration: 604800000  # 7天
   tokenPrefix: Bearer 
   issuer: medical-platform
 
 logging:
   level:
-    root: DEBUG
-    com.yunchuan.medical: DEBUG
-    org.springframework.security: DEBUG
-    org.springframework.jdbc.core: DEBUG
-    org.springframework.web: DEBUG
-    org.hibernate: DEBUG
-    org.flywaydb: DEBUG
-    org.mybatis: DEBUG
+    root: INFO
+    com.yunchuan.medical: INFO
+    org.springframework.security: INFO
+    org.springframework.jdbc.core: INFO
+    org.springframework.web: INFO
+    org.hibernate: INFO
+    org.flywaydb: INFO
+    org.mybatis: INFO
+    org.apache.tomcat: INFO
+    org.apache.catalina: INFO
+    org.apache.coyote: INFO
 
 ai:
   api-key: your-openai-api-key

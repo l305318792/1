@@ -21,9 +21,19 @@ public class DoctorDTO {
     private String id;
     
     /**
+     * 用户ID
+     */
+    private String userId;
+    
+    /**
      * 医生姓名
      */
     private String name;
+    
+    /**
+     * 手机号
+     */
+    private String phone;
     
     /**
      * 科室ID
@@ -49,21 +59,36 @@ public class DoctorDTO {
      * 简介
      */
     private String introduction;
+
+    /**
+     * 问诊费用
+     */
+    private BigDecimal consultationFee;
     
     /**
-     * 状态(NORMAL-正常，DISABLED-禁用)
+     * 状态(1-正常，0-禁用)
      */
-    private String status;
+    private Integer status;
     
     /**
-     * 平均评分
+     * 评分
      */
-    private BigDecimal averageRating;
+    private BigDecimal rating;
     
     /**
      * 评分次数
      */
     private Integer ratingCount;
+
+    /**
+     * 问诊次数
+     */
+    private Integer consultCount;
+
+    /**
+     * 预约次数
+     */
+    private Integer appointmentCount;
     
     /**
      * 创建时间

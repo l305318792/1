@@ -1,3 +1,16 @@
+-- 添加医生账号
+INSERT INTO user (id, username, password, name, role, status, create_time, update_time)
+VALUES 
+('2', 'doctor1', '$2a$10$n9S0AehL7KHWeKPw.h8INOmFtBWY1q8GS3G8PRnkA7tGGfUHWkR7y', '张医', 'DOCTOR', 'ACTIVE', NOW(), NOW()),
+('3', 'doctor2', '$2a$10$n9S0AehL7KHWeKPw.h8INOmFtBWY1q8GS3G8PRnkA7tGGfUHWkR7y', '李医', 'DOCTOR', 'ACTIVE', NOW(), NOW()),
+('4', 'doctor3', '$2a$10$n9S0AehL7KHWeKPw.h8INOmFtBWY1q8GS3G8PRnkA7tGGfUHWkR7y', '王医', 'DOCTOR', 'ACTIVE', NOW(), NOW());
+
+-- 添加患者账号
+INSERT INTO user (id, username, password, name, role, status, create_time, update_time)
+VALUES 
+('5', 'patient1', '$2a$10$n9S0AehL7KHWeKPw.h8INOmFtBWY1q8GS3G8PRnkA7tGGfUHWkR7y', '张三', 'USER', 'ACTIVE', NOW(), NOW()),
+('6', 'patient2', '$2a$10$n9S0AehL7KHWeKPw.h8INOmFtBWY1q8GS3G8PRnkA7tGGfUHWkR7y', '李四', 'USER', 'ACTIVE', NOW(), NOW());
+
 -- 添加科室数据
 INSERT INTO department (id, name, introduction, status, create_time, update_time)
 VALUES 

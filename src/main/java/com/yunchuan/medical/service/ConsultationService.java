@@ -19,6 +19,11 @@ public interface ConsultationService {
     List<ConsultationDTO> getConsultationList();
     
     /**
+     * 获取用户的问诊列表
+     */
+    List<ConsultationDTO> getConsultationListByUserId(String userId);
+    
+    /**
      * 获取问诊详情
      */
     ConsultationDTO getConsultation(String id);

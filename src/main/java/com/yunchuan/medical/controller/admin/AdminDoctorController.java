@@ -83,8 +83,11 @@ public class AdminDoctorController {
         Doctor doctor = new Doctor();
         BeanUtils.copyProperties(doctorDTO, doctor);
         // 设置初始值
-        doctor.setAverageRating(new BigDecimal("5.0"));
+        doctor.setRating(new BigDecimal("5.0"));
         doctor.setRatingCount(0);
+        doctor.setStatus(1);
+        doctor.setConsultCount(0);
+        doctor.setAppointmentCount(0);
         doctor.setCreateTime(LocalDateTime.now());
         doctor.setUpdateTime(LocalDateTime.now());
         
@@ -117,6 +120,7 @@ public class AdminDoctorController {
 
         BeanUtils.copyProperties(doctorDTO, doctor);
         doctor.setId(id); // 确保ID不被修改
+        doctor.setUpdateTime(LocalDateTime.now());
         
         boolean success = doctorService.updateById(doctor);
         if (!success) {
@@ -146,7 +150,7 @@ public class AdminDoctorController {
      */
     @Operation(summary = "更新医生状态")
     @PutMapping("/{id}/status")
-    public Result<Void> updateStatus(@PathVariable String id, @RequestParam String status) {
+    public Result<Void> updateStatus(@PathVariable String id, @RequestParam Integer status) {
         Doctor doctor = doctorService.getById(id);
         if (doctor == null) {
             return Result.error("医生不存在");
@@ -161,6 +165,9 @@ public class AdminDoctorController {
      * 将Doctor实体转换为DTO
      */
     private DoctorDTO convertToDTO(Doctor doctor) {
+        if (doctor == null) {
+            return null;
+        }
         DoctorDTO dto = new DoctorDTO();
         BeanUtils.copyProperties(doctor, dto);
         

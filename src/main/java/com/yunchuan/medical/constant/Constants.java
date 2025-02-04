@@ -87,9 +87,9 @@ public class Constants {
     public static final String SCHEDULE_CANCELLED = "已取消";
     
     // 预约状态
-    public static final String APPOINTMENT_PENDING = "待就诊";
-    public static final String APPOINTMENT_COMPLETED = "已完成";
-    public static final String APPOINTMENT_CANCELLED = "已取消";
+    public static final String APPOINTMENT_PENDING = "PENDING";
+    public static final String APPOINTMENT_COMPLETED = "COMPLETED";
+    public static final String APPOINTMENT_CANCELLED = "CANCELLED";
     
     // 医生状态
     public static final String DOCTOR_ACTIVE = "在职";

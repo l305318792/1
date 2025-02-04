@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import com.yunchuan.medical.common.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 全局异常处理器
@@ -70,10 +75,15 @@ public class GlobalExceptionHandler {
      * 处理业务异常
      */
     @ExceptionHandler(BusinessException.class)
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public Result<?> handleBusinessException(BusinessException e) {
+    public ResponseEntity<Result<?>> handleBusinessException(BusinessException e) {
         log.error("业务异常: {}", e.getMessage());
-        return Result.error(e.getCode(), e.getMessage());
+        Result<?> result = Result.error(400, e.getMessage());
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(HttpHeaders.CONTENT_ENCODING, StandardCharsets.UTF_8.name());
+        
+        return new ResponseEntity<>(result, headers, HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -89,8 +99,14 @@ public class GlobalExceptionHandler {
      * 处理其他异常
      */
     @ExceptionHandler(Exception.class)
-    public Result<?> handleException(Exception e) {
+    public ResponseEntity<Result<?>> handleException(Exception e) {
         log.error("系统异常", e);
-        return Result.error(500, "系统异常: " + e.getMessage());
+        Result<?> result = Result.error(500, "系统异常，请联系管理员");
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(HttpHeaders.CONTENT_ENCODING, StandardCharsets.UTF_8.name());
+        
+        return new ResponseEntity<>(result, headers, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 } 

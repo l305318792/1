@@ -66,7 +66,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             // 设置初始值
             schedule.setAppointedCount(0);
             if (schedule.getStatus() == null) {
-                schedule.setStatus("AVAILABLE");
+                schedule.setStatus("1");
             }
             
             scheduleMapper.insert(schedule);
@@ -361,7 +361,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 schedule.setPeriod(formDTO.getPeriod());
                 schedule.setMaxAppointments(formDTO.getMaxAppointments());
                 schedule.setAppointedCount(0);
-                schedule.setStatus("AVAILABLE");
+                schedule.setStatus("1");
                 schedule.setRemark(formDTO.getRemark());
                 schedule.setCreateTime(LocalDateTime.now());
                 schedule.setUpdateTime(LocalDateTime.now());
@@ -393,7 +393,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                     schedule.setPeriod(period);
                     schedule.setMaxAppointments(batchDTO.getMaxAppointments());
                     schedule.setAppointedCount(0);
-                    schedule.setStatus("AVAILABLE");
+                    schedule.setStatus("1");
                     schedule.setRemark(batchDTO.getRemark());
                     schedule.setCreateTime(LocalDateTime.now());
                     schedule.setUpdateTime(LocalDateTime.now());

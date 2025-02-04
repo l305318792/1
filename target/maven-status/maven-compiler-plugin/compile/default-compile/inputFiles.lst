@@ -27,6 +27,7 @@ D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunch
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\config\SwaggerConfig.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\entity\Appointment.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\util\SecurityUtil.java
+D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\controller\patient\PatientProfileController.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\controller\ContentController.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\controller\admin\AdminUserController.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\controller\admin\AdminContentController.java
@@ -35,7 +36,6 @@ D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunch
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\service\AppointmentService.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\dto\TokenDTO.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\entity\Consult.java
-D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\config\CorsConfig.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\controller\PaymentController.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\controller\NewsController.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\config\CharacterEncodingConfig.java
@@ -108,6 +108,7 @@ D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunch
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\entity\Rating.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\common\ValidationConfig.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\controller\PrescriptionController.java
+D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\controller\patient\PatientConsultationController.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\controller\DepartmentController.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\dto\DepartmentPathDTO.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\security\JwtAuthenticationEntryPoint.java
@@ -151,7 +152,6 @@ D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunch
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\dto\AppointmentQueryDTO.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\common\result\Result.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\mapper\PrescriptionMapper.java
-D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\config\WebConfig.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\common\result\ResultCode.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\service\DepartmentService.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\entity\DoctorRating.java
@@ -170,7 +170,6 @@ D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunch
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\entity\NewsTag.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\entity\PaymentRecord.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\controller\DoctorController.java
-D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\controller\UserController.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\security\CustomUserDetails.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\config\MyBatisConfig.java
 D:\dasdas\运城市移动医疗咨询平台\后端\demo5\src\main\java\com\yunchuan\medical\dto\AddDepartmentDTO.java

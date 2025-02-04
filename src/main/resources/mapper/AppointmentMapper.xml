@@ -33,7 +33,7 @@
             a.sequence_number,
             a.status,
             a.cancel_reason,
-            a.visit_time,
+            a.visit_time as appointment_time,
             a.create_time,
             a.update_time,
             d.name as doctor_name,

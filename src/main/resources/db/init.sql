@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 -- 插入管理员用户（密码：123456）
 INSERT INTO `user` (`id`, `username`, `password`, `name`, `role`, `status`)
-VALUES ('1', 'admin', '$2a$10$N.ZOn9G6/YLFixAOPMg/h.z7pCu6v2XyFDtC4q.jeeGm/TEZyj15C', '管理员', 'ADMIN', 1);
+VALUES ('1', 'admin', '$2a$10$VwppB9m3OeA1AUjMQqyU0u4qicb3rnyfKZCbxyTcjFdwCuF.4Y8vG', '管理员', 'ADMIN', 1);
 
 -- 插入医生用户
 INSERT INTO `user` (`id`, `username`, `password`, `name`, `role`, `status`)

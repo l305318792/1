@@ -25,6 +25,11 @@ public class UserDTO {
     private String username;
     
     /**
+     * 密码
+     */
+    private String password;
+    
+    /**
      * 姓名
      */
     private String name;
@@ -38,6 +43,11 @@ public class UserDTO {
      * 邮箱
      */
     private String email;
+    
+    /**
+     * 角色
+     */
+    private String role;
     
     /**
      * 状态（normal-正常，disabled-禁用）

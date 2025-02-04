@@ -51,7 +51,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
     }
 
     @Override
-    public boolean updateStatus(String id, String status) {
+    public boolean updateStatus(String id, Integer status) {
         Doctor doctor = this.getById(id);
         if (doctor != null) {
             doctor.setStatus(status);

@@ -11,7 +11,7 @@ VALUES
 
 -- 插入管理员用户 (密码: 123456)
 INSERT INTO `user` (`id`, `username`, `password`, `name`, `role`, `phone`, `email`, `status`)
-VALUES ('1', 'admin', '$2a$10$N.ZOn9G6/YLxy0c/g6lB.evGXS1XxqBqy1gRXQwgUk.ZLKCf9NOqu', '系统管理员', 'ADMIN', '13800000000', 'admin@example.com', 1);
+VALUES ('1', 'admin', '$2a$10$VwppB9m3OeA1AUjMQqyU0u4qicb3rnyfKZCbxyTcjFdwCuF.4Y8vG', '系统管理员', 'ADMIN', '13800000000', 'admin@example.com', 1);
 
 -- 插入测试医生用户 (密码: 123456)
 INSERT INTO `user` (`id`, `username`, `password`, `name`, `role`, `phone`, `email`, `status`)

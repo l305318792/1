@@ -21,6 +21,6 @@ public interface DoctorMapper extends BaseMapper<Doctor> {
     /**
      * 更新医生评分
      */
-    @Update("UPDATE doctor SET average_rating = #{rating}, rating_count = rating_count + 1 WHERE id = #{id}")
+    @Update("UPDATE doctor SET rating = #{rating}, rating_count = rating_count + 1 WHERE id = #{id}")
     boolean updateRating(String id, BigDecimal rating);
 }

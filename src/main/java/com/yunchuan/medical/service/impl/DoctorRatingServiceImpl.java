@@ -6,10 +6,13 @@ import com.yunchuan.medical.dto.DoctorRatingFormDTO;
 import com.yunchuan.medical.dto.AppointmentDetailDTO;
 import com.yunchuan.medical.entity.Appointment;
 import com.yunchuan.medical.entity.DoctorRating;
+import com.yunchuan.medical.entity.Doctor;
+import com.yunchuan.medical.entity.User;
 import com.yunchuan.medical.exception.BusinessException;
 import com.yunchuan.medical.mapper.AppointmentMapper;
 import com.yunchuan.medical.mapper.DoctorMapper;
 import com.yunchuan.medical.mapper.DoctorRatingMapper;
+import com.yunchuan.medical.mapper.UserMapper;
 import com.yunchuan.medical.service.DoctorRatingService;
 import com.yunchuan.medical.util.SecurityUtil;
 import org.springframework.beans.BeanUtils;
@@ -32,13 +35,16 @@ public class DoctorRatingServiceImpl implements DoctorRatingService {
     private final DoctorRatingMapper doctorRatingMapper;
     private final AppointmentMapper appointmentMapper;
     private final DoctorMapper doctorMapper;
+    private final UserMapper userMapper;
 
     public DoctorRatingServiceImpl(DoctorRatingMapper doctorRatingMapper,
                                  AppointmentMapper appointmentMapper,
-                                 DoctorMapper doctorMapper) {
+                                 DoctorMapper doctorMapper,
+                                 UserMapper userMapper) {
         this.doctorRatingMapper = doctorRatingMapper;
         this.appointmentMapper = appointmentMapper;
         this.doctorMapper = doctorMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -130,6 +136,19 @@ public class DoctorRatingServiceImpl implements DoctorRatingService {
         }
         DoctorRatingDTO dto = new DoctorRatingDTO();
         BeanUtils.copyProperties(rating, dto);
+        
+        // 查询医生信息
+        Doctor doctor = doctorMapper.selectById(rating.getDoctorId());
+        if (doctor != null) {
+            dto.setDoctorName(doctor.getName());
+        }
+        
+        // 查询用户信息
+        User user = userMapper.selectById(rating.getUserId());
+        if (user != null) {
+            dto.setUserName(user.getName());
+        }
+        
         return dto;
     }
 } 
