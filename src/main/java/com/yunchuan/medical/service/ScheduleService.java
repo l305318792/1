@@ -108,4 +108,10 @@ public interface ScheduleService {
      * @param batchDTO 批量排班信息
      */
     void batchAddSchedule(BatchScheduleDTO batchDTO);
+
+    /**
+     * 批量更新排班
+     * @param batchDTO 批量排班信息
+     */
+    void batchUpdateSchedule(BatchScheduleDTO batchDTO);
 } 

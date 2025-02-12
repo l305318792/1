@@ -5,10 +5,12 @@ import com.yunchuan.medical.dto.DepartmentDTO;
 import com.yunchuan.medical.dto.DoctorDTO;
 import com.yunchuan.medical.entity.Department;
 import com.yunchuan.medical.service.DepartmentService;
+import com.yunchuan.medical.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,9 +25,11 @@ import java.util.stream.Collectors;
 public class CommonController {
 
     private final DepartmentService departmentService;
+    private final FileService fileService;
 
-    public CommonController(DepartmentService departmentService) {
+    public CommonController(DepartmentService departmentService, FileService fileService) {
         this.departmentService = departmentService;
+        this.fileService = fileService;
     }
 
     /**
@@ -119,11 +123,16 @@ public class CommonController {
     }
 
     /**
-     * 上传
+     * 文件上传
+     * @param file 文件
+     * @param type 文件类型（AVATAR-头像，MEDICAL-医疗文件，OTHER-其他）
+     * @return 文件访问URL
      */
+    @Operation(summary = "文件上传")
     @PostMapping("/upload")
-    public Result<String> upload(@RequestBody Object file) {
-        return Result.ok("");
+    public Result<String> upload(@RequestParam("file") MultipartFile file, @RequestParam("type") String type) {
+        String fileUrl = fileService.uploadFile(file, type);
+        return Result.ok(fileUrl);
     }
 
     /**

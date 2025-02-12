@@ -41,4 +41,11 @@ public interface MedicalRecordService {
      * @param id 病历ID
      */
     void deleteMedicalRecord(String id);
+
+    /**
+     * 根据问诊记录自动生成病历
+     * @param consultationId 问诊ID
+     * @return 生成的病历记录
+     */
+    MedicalRecordDTO generateFromConsultation(String consultationId);
 } 

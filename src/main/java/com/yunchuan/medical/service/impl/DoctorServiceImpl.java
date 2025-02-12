@@ -18,6 +18,11 @@ import java.util.stream.Collectors;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yunchuan.medical.entity.Department;
 import com.yunchuan.medical.service.DepartmentService;
+import com.yunchuan.medical.dto.DoctorDTO;
+import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
+import java.util.UUID;
+import java.math.BigDecimal;
 
 /**
  * <p>
@@ -39,15 +44,69 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
     private DepartmentService departmentService;
 
     @Override
-    public Doctor getDoctorById(String id) {
-        log.info("正在查询医生信息，医生ID: {}", id);
-        Doctor doctor = this.getById(id);
-        if (doctor != null) {
-            log.info("成功获取医生信息: {}", doctor);
-        } else {
-            log.warn("未找到医生信息，医生ID: {}", id);
+    @Transactional
+    public DoctorDTO createDoctor(DoctorDTO doctorDTO) {
+        Doctor doctor = new Doctor();
+        BeanUtils.copyProperties(doctorDTO, doctor);
+        
+        // 设置ID和初始值
+        doctor.setId(UUID.randomUUID().toString().replace("-", ""));
+        doctor.setStatus(1);
+        doctor.setRating(BigDecimal.ZERO);
+        doctor.setRatingCount(0);
+        doctor.setConsultCount(0);
+        doctor.setAppointmentCount(0);
+        doctor.setCreateTime(LocalDateTime.now());
+        doctor.setUpdateTime(LocalDateTime.now());
+        
+        // 保存医生信息
+        save(doctor);
+        
+        // 返回创建后的医生信息
+        BeanUtils.copyProperties(doctor, doctorDTO);
+        return doctorDTO;
+    }
+
+    @Override
+    @Transactional
+    public DoctorDTO updateDoctor(DoctorDTO doctorDTO) {
+        Doctor doctor = getById(doctorDTO.getId());
+        if (doctor == null) {
+            throw new RuntimeException("医生不存在");
         }
-        return doctor;
+        
+        BeanUtils.copyProperties(doctorDTO, doctor);
+        doctor.setUpdateTime(LocalDateTime.now());
+        
+        // 更新医生信息
+        updateById(doctor);
+        
+        // 返回更新后的医生信息
+        BeanUtils.copyProperties(doctor, doctorDTO);
+        return doctorDTO;
+    }
+
+    @Override
+    public DoctorDTO getDoctorById(String id) {
+        Doctor doctor = getById(id);
+        if (doctor == null) {
+            throw new RuntimeException("医生不存在");
+        }
+        
+        DoctorDTO doctorDTO = new DoctorDTO();
+        BeanUtils.copyProperties(doctor, doctorDTO);
+        return doctorDTO;
+    }
+
+    @Override
+    @Transactional
+    public void deleteDoctor(String id) {
+        Doctor doctor = getById(id);
+        if (doctor == null) {
+            throw new RuntimeException("医生不存在");
+        }
+        
+        removeById(id);
     }
 
     @Override
@@ -85,7 +144,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
         
         // 构建查询条件
         LambdaQueryWrapper<Schedule> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Schedule::getDoctorId, Long.parseLong(doctorId))
+        queryWrapper.eq(Schedule::getDoctorId, doctorId)
                    .ge(Schedule::getScheduleDate, today)
                    .le(Schedule::getScheduleDate, oneWeekLater)
                    .orderByAsc(Schedule::getScheduleDate, Schedule::getPeriod);
@@ -108,7 +167,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
     }
 
     @Override
-    public List<ScheduleDTO> getDoctorSchedule(Long doctorId, LocalDate startDate, LocalDate endDate) {
+    public List<ScheduleDTO> getDoctorSchedule(String doctorId, LocalDate startDate, LocalDate endDate) {
         log.info("正在查询医生排班信息，医生ID: {}, 开始日期: {}, 结束日期: {}", doctorId, startDate, endDate);
         
         // 构建查询条件
@@ -133,5 +192,34 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
             
         log.info("成功获取医生排班信息，数量: {}", scheduleDTOs.size());
         return scheduleDTOs;
+    }
+
+    @Override
+    public Doctor getByUserId(String userId) {
+        log.info("根据用户ID查询医生信息: {}", userId);
+        return lambdaQuery()
+                .eq(Doctor::getUserId, userId)
+                .one();
+    }
+
+    @Override
+    public List<DoctorDTO> getDoctorsByDepartment(String departmentId) {
+        log.info("获取科室{}的医生列表", departmentId);
+        
+        // 构建查询条件
+        List<Doctor> doctors = lambdaQuery()
+                .eq(Doctor::getDepartmentId, departmentId)
+                .eq(Doctor::getStatus, 1)  // 只查询正常状态的医生
+                .orderByDesc(Doctor::getRating)  // 按评分降序排序
+                .list();
+        
+        // 转换为DTO
+        return doctors.stream()
+                .map(doctor -> {
+                    DoctorDTO dto = new DoctorDTO();
+                    BeanUtils.copyProperties(doctor, dto);
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 }

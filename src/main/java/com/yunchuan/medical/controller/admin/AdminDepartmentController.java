@@ -1,5 +1,6 @@
 package com.yunchuan.medical.controller.admin;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yunchuan.medical.common.result.Result;
 import com.yunchuan.medical.dto.DepartmentDTO;
 import com.yunchuan.medical.entity.Department;
@@ -33,8 +34,18 @@ public class AdminDepartmentController {
      */
     @Operation(summary = "获取科室列表")
     @GetMapping("/list")
-    public Result<List<DepartmentDTO>> getDepartmentList() {
-        List<Department> departments = departmentService.list();
+    public Result<List<DepartmentDTO>> getDepartmentList(@RequestParam(required = false) String keyword) {
+        // 使用QueryWrapper进行条件查询
+        QueryWrapper<Department> queryWrapper = new QueryWrapper<>();
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            queryWrapper.like("name", keyword)
+                       .or()
+                       .like("introduction", keyword);
+        }
+        // 添加排序条件
+        queryWrapper.orderByAsc("sort_order", "create_time");
+        
+        List<Department> departments = departmentService.list(queryWrapper);
         List<DepartmentDTO> dtoList = departments.stream()
                 .map(dept -> {
                     DepartmentDTO dto = DepartmentDTO.builder()
@@ -153,5 +164,34 @@ public class AdminDepartmentController {
         department.setUpdateTime(LocalDateTime.now());
         boolean success = departmentService.updateById(department);
         return success ? Result.success() : Result.error("更新科室状态失败");
+    }
+
+    /**
+     * 批量删除科室
+     */
+    @Operation(summary = "批量删除科室")
+    @DeleteMapping("/batch")
+    public Result<Void> batchDeleteDepartments(@RequestBody List<String> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Result.error("请选择要删除的科室");
+        }
+        boolean success = departmentService.removeByIds(ids);
+        return success ? Result.success() : Result.error("批量删除科室失败");
+    }
+
+    /**
+     * 更新科室排序
+     */
+    @Operation(summary = "更新科室排序")
+    @PutMapping("/{id}/sort")
+    public Result<Void> updateDepartmentSort(@PathVariable String id, @RequestParam Integer sortOrder) {
+        Department department = departmentService.getById(id);
+        if (department == null) {
+            return Result.error("科室不存在");
+        }
+        department.setSortOrder(sortOrder);
+        department.setUpdateTime(LocalDateTime.now());
+        boolean success = departmentService.updateById(department);
+        return success ? Result.success() : Result.error("更新科室排序失败");
     }
 } 

@@ -11,6 +11,7 @@ import com.yunchuan.medical.util.JwtUtil;
 import com.yunchuan.medical.security.CustomUserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +19,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 认证服务实现类
@@ -25,20 +27,24 @@ import java.util.Collections;
 @Service
 public class AuthServiceImpl implements AuthService {
     private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
-
+    private static final String TOKEN_BLACKLIST_PREFIX = "token:blacklist:";
+    
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
+    private final StringRedisTemplate redisTemplate;
 
     public AuthServiceImpl(UserMapper userMapper,
                          PasswordEncoder passwordEncoder,
                          JwtUtil jwtUtil,
-                         UserDetailsService userDetailsService) {
+                         UserDetailsService userDetailsService,
+                         StringRedisTemplate redisTemplate) {
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -126,9 +132,49 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    /**
+     * 验证token是否有效
+     */
+    private boolean isValidToken(String token) {
+        try {
+            String username = jwtUtil.getUsernameFromToken(token);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            return jwtUtil.validateToken(token, userDetails);
+        } catch (Exception e) {
+            log.error("Token验证失败", e);
+            return false;
+        }
+    }
+
     @Override
     public void logout(String token) {
-        // 可以在这里实现token黑名单等逻辑
-        log.info("用户退出登录");
+        try {
+            if (token != null && token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
+            
+            // 验证token是否有效
+            if (!isValidToken(token)) {
+                log.warn("无效的token");
+                return;
+            }
+            
+            // 获取token的过期时间
+            long expirationTime = jwtUtil.getExpirationDateFromToken(token).getTime();
+            long currentTime = System.currentTimeMillis();
+            long ttl = expirationTime - currentTime;
+            
+            if (ttl > 0) {
+                // 将token加入黑名单，过期时间与token剩余有效期一致
+                String blacklistKey = TOKEN_BLACKLIST_PREFIX + token;
+                redisTemplate.opsForValue().set(blacklistKey, "1", ttl, TimeUnit.MILLISECONDS);
+                log.info("Token已加入黑名单，将在{}毫秒后过期", ttl);
+            }
+            
+            log.info("用户成功退出登录");
+        } catch (Exception e) {
+            log.error("退出登录时发生错误", e);
+            throw new BusinessException("退出登录失败");
+        }
     }
 } 

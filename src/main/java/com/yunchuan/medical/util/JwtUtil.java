@@ -80,10 +80,14 @@ public class JwtUtil {
      */
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", userDetails.getAuthorities().stream()
+        
+        // 获取用户角色，不添加ROLE_前缀
+        String role = userDetails.getAuthorities().stream()
             .findFirst()
-            .map(authority -> authority.getAuthority())
-            .orElse("ROLE_USER"));
+            .map(authority -> authority.getAuthority().replace("ROLE_", ""))
+            .orElse("USER");
+            
+        claims.put("role", role);
         
         // 如果UserDetails是CustomUserDetails，则添加用户ID
         if (userDetails instanceof CustomUserDetails) {

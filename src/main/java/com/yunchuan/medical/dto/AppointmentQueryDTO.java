@@ -4,49 +4,67 @@ import lombok.Data;
 import java.time.LocalDate;
 
 /**
- * 预约查询DTO
- * @author yunchuan
- * @since 1.0.0
+ * 预约查询条件DTO
  */
 @Data
 public class AppointmentQueryDTO {
     /**
-     * 用户ID
+     * 当前页码
      */
-    private String userId;
-    
+    private int current = 1;
+
     /**
-     * 医生ID
+     * 每页大小
      */
-    private String doctorId;
-    
+    private int size = 10;
+
     /**
      * 科室ID
      */
     private String departmentId;
-    
+
     /**
-     * 开始日期
+     * 医生ID
      */
-    private LocalDate startDate;
-    
+    private String doctorId;
+
     /**
-     * 结束日期
-     */
-    private LocalDate endDate;
-    
-    /**
-     * 状态
+     * 预约状态
      */
     private String status;
 
     /**
-     * 当前页码
+     * 开始日期
      */
-    private Integer current = 1;
-    
+    private LocalDate startDate;
+
     /**
-     * 每页大小
+     * 结束日期
      */
-    private Integer size = 10;
+    private LocalDate endDate;
+
+    /**
+     * 患者姓名
+     */
+    private String patientName;
+
+    /**
+     * 患者手机号
+     */
+    private String patientPhone;
+
+    /**
+     * 预约号
+     */
+    private String appointmentNo;
+
+    /**
+     * 排序字段
+     */
+    private String sortField;
+
+    /**
+     * 排序方向（asc/desc）
+     */
+    private String sortOrder;
 } 

@@ -6,16 +6,41 @@
     <resultMap id="BaseResultMap" type="com.yunchuan.medical.entity.Rating">
         <id column="id" property="id" />
         <result column="appointment_id" property="appointmentId" />
-        <result column="patient_id" property="patientId" />
+        <result column="consultation_id" property="consultationId" />
         <result column="doctor_id" property="doctorId" />
-        <result column="score" property="score" />
+        <result column="user_id" property="userId" />
+        <result column="service_attitude" property="serviceAttitude" />
+        <result column="medical_skill" property="medicalSkill" />
+        <result column="medical_effect" property="medicalEffect" />
         <result column="comment" property="comment" />
-        <result column="created_at" property="createdAt" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, appointment_id, patient_id, doctor_id, score, comment, created_at
+        id, appointment_id, consultation_id, doctor_id, user_id, service_attitude, medical_skill, medical_effect, 
+        comment, status, create_time, update_time
     </sql>
+
+    <!-- 根据问诊ID查询评价 -->
+    <select id="selectByConsultationId" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List" />
+        FROM doctor_rating 
+        WHERE consultation_id = #{consultationId} 
+        AND status = 'NORMAL' 
+        LIMIT 1
+    </select>
+
+    <!-- 检查问诊是否已评价 -->
+    <select id="existsByConsultationId" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT 1 FROM doctor_rating 
+            WHERE consultation_id = #{consultationId} 
+            AND status = 'NORMAL'
+        )
+    </select>
 
 </mapper>

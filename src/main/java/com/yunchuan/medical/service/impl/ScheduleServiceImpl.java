@@ -409,6 +409,71 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void batchUpdateSchedule(BatchScheduleDTO batchDTO) {
+        log.info("开始批量更新排班：{}", batchDTO);
+        try {
+            validateBatchSchedule(batchDTO);
+            
+            // 构建查询条件
+            LambdaQueryWrapper<Schedule> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(Schedule::getDoctorId, batchDTO.getDoctorId())
+                       .eq(Schedule::getDepartmentId, batchDTO.getDepartmentId())
+                       .in(Schedule::getScheduleDate, batchDTO.getScheduleDates())
+                       .in(Schedule::getPeriod, batchDTO.getPeriods());
+            
+            log.info("查询条件：doctorId={}, departmentId={}, dates={}, periods={}", 
+                    batchDTO.getDoctorId(), batchDTO.getDepartmentId(), 
+                    batchDTO.getScheduleDates(), batchDTO.getPeriods());
+            
+            // 查询需要更新的排班记录
+            List<Schedule> schedules = scheduleMapper.selectList(queryWrapper);
+            if (schedules.isEmpty()) {
+                log.warn("未找到符合条件的排班记录，将创建新的排班");
+                // 如果没有找到排班记录，创建新的排班
+                for (LocalDate date : batchDTO.getScheduleDates()) {
+                    for (String period : batchDTO.getPeriods()) {
+                        Schedule schedule = new Schedule();
+                        schedule.setId(UUID.randomUUID().toString().replace("-", ""));
+                        schedule.setDoctorId(batchDTO.getDoctorId());
+                        schedule.setDepartmentId(batchDTO.getDepartmentId());
+                        schedule.setScheduleDate(date);
+                        schedule.setPeriod(period);
+                        schedule.setMaxAppointments(batchDTO.getMaxAppointments());
+                        schedule.setAppointedCount(0);
+                        schedule.setStatus("1");
+                        schedule.setRemark(batchDTO.getRemark());
+                        schedule.setCreateTime(LocalDateTime.now());
+                        schedule.setUpdateTime(LocalDateTime.now());
+                        
+                        scheduleMapper.insert(schedule);
+                        log.info("创建新排班：date={}, period={}", date, period);
+                    }
+                }
+                return;
+            }
+            
+            // 更新排班信息
+            log.info("找到{}条需要更新的排班记录", schedules.size());
+            for (Schedule schedule : schedules) {
+                schedule.setMaxAppointments(batchDTO.getMaxAppointments());
+                schedule.setRemark(batchDTO.getRemark());
+                schedule.setUpdateTime(LocalDateTime.now());
+                scheduleMapper.updateById(schedule);
+                log.info("更新排班成功：id={}, date={}, period={}", 
+                        schedule.getId(), schedule.getScheduleDate(), schedule.getPeriod());
+            }
+            log.info("批量更新排班完成");
+        } catch (BusinessException e) {
+            log.error("批量更新排班业务异常：{}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("批量更新排班系统异常", e);
+            throw new BusinessException("批量更新排班失败：" + e.getMessage());
+        }
+    }
+
     /**
      * 验证排班表单数据
      */

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import lombok.Data;
 
 /**
@@ -70,10 +71,28 @@ public class Appointment implements Serializable {
     private String reviewReason;
 
     /**
+     * 备注
+     */
+    @TableField("remark")
+    private String remark;
+
+    /**
      * 就诊时间
      */
     @TableField("visit_time")
     private LocalDateTime visitTime;
+
+    /**
+     * 预约金额
+     */
+    @TableField("amount")
+    private BigDecimal amount;
+
+    /**
+     * 支付记录ID
+     */
+    @TableField("payment_id")
+    private String paymentId;
 
     /**
      * 创建时间

@@ -2,6 +2,8 @@ package com.yunchuan.medical.service.impl;
 
 import com.yunchuan.medical.constant.Constants;
 import com.yunchuan.medical.dto.MedicalRecordDTO;
+import com.yunchuan.medical.dto.ConsultationDTO;
+import com.yunchuan.medical.dto.PrescriptionDTO;
 import com.yunchuan.medical.entity.MedicalRecord;
 import com.yunchuan.medical.entity.User;
 import com.yunchuan.medical.entity.Doctor;
@@ -10,6 +12,7 @@ import com.yunchuan.medical.mapper.MedicalRecordMapper;
 import com.yunchuan.medical.service.MedicalRecordService;
 import com.yunchuan.medical.service.UserService;
 import com.yunchuan.medical.service.DoctorService;
+import com.yunchuan.medical.service.ConsultationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,13 +35,16 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     private final MedicalRecordMapper medicalRecordMapper;
     private final UserService userService;
     private final DoctorService doctorService;
+    private final ConsultationService consultationService;
 
     public MedicalRecordServiceImpl(MedicalRecordMapper medicalRecordMapper,
                                   UserService userService,
-                                  DoctorService doctorService) {
+                                  DoctorService doctorService,
+                                  ConsultationService consultationService) {
         this.medicalRecordMapper = medicalRecordMapper;
         this.userService = userService;
         this.doctorService = doctorService;
+        this.consultationService = consultationService;
     }
 
     @Override
@@ -133,6 +139,126 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
         }
     }
 
+    /**
+     * 根据问诊和处方自动生成病历
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MedicalRecordDTO generateFromConsultation(String consultationId) {
+        log.info("开始根据问诊生成病历，问诊ID: {}", consultationId);
+        
+        // 1. 获取问诊记录
+        ConsultationDTO consultation = consultationService.getConsultation(consultationId);
+        if (consultation == null) {
+            throw new BusinessException("问诊记录不存在");
+        }
+        
+        // 2. 获取处方列表
+        List<PrescriptionDTO> prescriptions = consultationService.getPrescriptionsByConsultationId(consultationId);
+        if (prescriptions.isEmpty()) {
+            throw new BusinessException("未找到相关处方");
+        }
+        
+        // 3. 创建病历记录
+        MedicalRecord record = new MedicalRecord();
+        record.setId(String.format("MR%d", System.currentTimeMillis() % 100000000));
+        record.setPatientId(consultation.getUserId());
+        record.setDoctorId(consultation.getDoctorId());
+        
+        // 4. 设置就诊时间(使用问诊开始时间)
+        record.setVisitTime(consultation.getStartTime());
+        
+        // 5. 设置主诉(来自问诊的症状描述)
+        record.setChiefComplaint(consultation.getSymptoms());
+        
+        // 6. 设置现病史(使用问诊记录中的症状描述)
+        record.setPresentIllness(consultation.getSymptoms());
+        
+        // 7. 设置诊断(优先使用问诊记录中的诊断，如果没有再从处方中获取)
+        String diagnosis = null;
+        if (consultation.getDiagnosis() != null && !consultation.getDiagnosis().trim().isEmpty()) {
+            diagnosis = consultation.getDiagnosis().trim();
+        } else {
+            // 从处方中查找有效的诊断
+            for (PrescriptionDTO prescription : prescriptions) {
+                if (prescription.getDiagnosis() != null && 
+                    !prescription.getDiagnosis().trim().isEmpty() && 
+                    !"待医生诊断".equals(prescription.getDiagnosis().trim())) {
+                    diagnosis = prescription.getDiagnosis().trim();
+                    break;
+                }
+            }
+        }
+        record.setDiagnosis(diagnosis != null ? diagnosis : "待诊断");
+        
+        // 8. 设置治疗方案(包含所有处方信息)
+        StringBuilder treatment = new StringBuilder();
+        treatment.append("治疗记录：\n");
+        
+        // 按时间顺序处理所有处方
+        for (int i = prescriptions.size() - 1; i >= 0; i--) {
+            PrescriptionDTO prescription = prescriptions.get(i);
+            treatment.append("\n就诊时间：").append(prescription.getCreateTime().toLocalDate()).append("\n");
+            
+            // 添加诊断
+            if (prescription.getDiagnosis() != null && !prescription.getDiagnosis().trim().isEmpty() 
+                && !"待医生诊断".equals(prescription.getDiagnosis().trim())) {
+                treatment.append("诊断：").append(prescription.getDiagnosis().trim()).append("\n");
+            }
+            
+            // 添加用药信息
+            if (prescription.getMedications() != null && !prescription.getMedications().isEmpty()) {
+                treatment.append("用药方案：\n");
+                for (String medication : prescription.getMedications()) {
+                    if (medication != null && !medication.trim().isEmpty()) {
+                        treatment.append("- ").append(medication.trim()).append("\n");
+                    }
+                }
+            }
+            
+            // 添加用药说明
+            if (prescription.getDosage() != null && !prescription.getDosage().trim().isEmpty()) {
+                treatment.append("\n用药说明：\n").append(prescription.getDosage().trim());
+            }
+            
+            // 添加医嘱
+            if (prescription.getInstructions() != null && !prescription.getInstructions().trim().isEmpty()) {
+                treatment.append("\n\n医嘱：\n").append(prescription.getInstructions().trim());
+            }
+            
+            // 添加分隔线（除了最后一条记录）
+            if (i > 0) {
+                treatment.append("\n\n----------------------------------------\n");
+            }
+        }
+        
+        // 如果问诊有治疗建议，也添加到治疗方案中
+        if (consultation.getTreatment() != null && !consultation.getTreatment().trim().isEmpty()) {
+            treatment.append("\n\n总体治疗建议：\n").append(consultation.getTreatment().trim());
+        }
+        
+        record.setTreatment(treatment.toString());
+        
+        // 9. 设置既往史和体格检查为"无记录"
+        record.setPastHistory("无记录");
+        record.setPhysicalExam("无记录");
+        
+        // 10. 设置其他信息
+        record.setStatus(Constants.STATUS_ENABLED);
+        record.setCreateTime(LocalDateTime.now());
+        record.setUpdateTime(LocalDateTime.now());
+        
+        // 11. 保存病历
+        if (medicalRecordMapper.insert(record) <= 0) {
+            throw new BusinessException("保存病历失败");
+        }
+        
+        log.info("病历生成成功，ID: {}", record.getId());
+        
+        // 12. 返回病历DTO
+        return convertToDTO(record);
+    }
+
     private MedicalRecordDTO convertToDTO(MedicalRecord record) {
         if (record == null) {
             return null;
@@ -147,7 +273,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
             String patientId = record.getPatientId();
             if (patientId != null) {
                 log.info("获取患者信息，患者ID: {}", patientId);
-                User patient = userService.getUserByUsername("admin"); // 临时使用admin用户
+                User patient = userService.getById(patientId);
                 if (patient != null) {
                     dto.setPatientName(patient.getName() != null ? patient.getName() : patient.getUsername());
                     log.info("成功获取患者信息: {}", patient);
@@ -161,8 +287,14 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
             String doctorId = record.getDoctorId();
             if (doctorId != null) {
                 log.info("开始获取医生信息，医生ID: {}", doctorId);
-                dto.setDoctorName("主任医师"); // 临时使用固定值
-                log.info("使用默认医生信息");
+                Doctor doctor = doctorService.getById(doctorId);
+                if (doctor != null) {
+                    dto.setDoctorName(doctor.getName());
+                    log.info("成功获取医生信息: {}", doctor);
+                } else {
+                    log.warn("未找到医生信息，医生ID: {}", doctorId);
+                    dto.setDoctorName("未知医生");
+                }
             }
         } catch (Exception e) {
             log.error("获取用户或医生信息时发生错误: ", e);

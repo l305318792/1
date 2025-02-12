@@ -27,4 +27,10 @@ public interface ConsultationMapper extends BaseMapper<Consultation> {
      * 根据状态查询问诊记录
      */
     List<Consultation> selectByStatus(@Param("status") String status);
+
+    /**
+     * 根据医生ID和状态查询问诊记录
+     */
+    @Select("SELECT * FROM consultation WHERE doctor_id = #{doctorId} AND status = #{status} ORDER BY create_time DESC")
+    List<Consultation> selectByDoctorIdAndStatus(@Param("doctorId") String doctorId, @Param("status") String status);
 } 

@@ -5,6 +5,7 @@ import com.yunchuan.medical.exception.BusinessException;
 import com.yunchuan.medical.security.CustomUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * 安全工具类
@@ -14,11 +15,31 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class SecurityUtil {
     
     /**
-     * 获取当前用户ID
+     * 获取当前登录用户ID
      */
     public static String getCurrentUserId() {
-        User user = getCurrentUser();
-        return user.getId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof CustomUserDetails) {
+                User user = ((CustomUserDetails) principal).getUser();
+                if (user != null) {
+                    return user.getId();
+                }
+            }
+        }
+        throw new BusinessException("用户未登录");
+    }
+    
+    /**
+     * 获取当前登录用户名
+     */
+    public static String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            return authentication.getName();
+        }
+        return null;
     }
     
     /**

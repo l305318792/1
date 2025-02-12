@@ -1,1 +1,4 @@
+com\yunchuan\medical\controller\admin\AdminHolidayControllerTest.class
 com\yunchuan\medical\PasswordTest.class
+com\yunchuan\medical\controller\admin\AdminDashboardControllerTest.class
+com\yunchuan\medical\controller\PrescriptionControllerTest.class

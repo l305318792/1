@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ArticleDTO {
     /**
-     * ID
+     * 文章ID
      */
     private String id;
     
@@ -36,17 +36,17 @@ public class ArticleDTO {
     private String content;
     
     /**
-     * 分类（HEALTH_GUIDE-健康指南，DISEASE_PREVENTION-疾病预防，NUTRITION-营养保健）
+     * 分类（HEALTH_GUIDE-健康指南，DISEASE_PREVENTION-疾病预防）
      */
     private String category;
     
     /**
-     * 标签
+     * 标签列表
      */
     private List<String> tags;
     
     /**
-     * 状态（DRAFT-草稿，PUBLISHED-已发布，ARCHIVED-已归档）
+     * 状态（DRAFT-草稿，PUBLISHED-已发布，HIDDEN-已隐藏）
      */
     private String status;
     

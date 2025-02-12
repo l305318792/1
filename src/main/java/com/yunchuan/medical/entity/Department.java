@@ -59,14 +59,22 @@ public class Department implements Serializable {
     private String status;
 
     /**
+     * 排序号，值越小越靠前
+     */
+    @TableField("sort_order")
+    private Integer sortOrder;
+
+    /**
      * 创建时间
      */
+    @Builder.Default
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime = LocalDateTime.now();
 
     /**
      * 更新时间
      */
+    @Builder.Default
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime = LocalDateTime.now();
 }

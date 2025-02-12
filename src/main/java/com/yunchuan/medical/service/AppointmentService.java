@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yunchuan.medical.dto.AppointmentDTO;
 import com.yunchuan.medical.dto.AppointmentQueryDTO;
+import com.yunchuan.medical.dto.AppointmentStatisticsDTO;
 import com.yunchuan.medical.entity.Appointment;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -58,4 +60,30 @@ public interface AppointmentService {
      * @return 分页结果
      */
     IPage<AppointmentDTO> getAppointmentsByPage(Page<Appointment> page, AppointmentQueryDTO query);
+
+    /**
+     * 获取预约统计数据
+     */
+    AppointmentStatisticsDTO getAppointmentStatistics();
+
+    /**
+     * 更新预约信息
+     * @param appointmentDTO 预约信息
+     * @return 更新后的预约信息
+     */
+    AppointmentDTO updateAppointment(AppointmentDTO appointmentDTO);
+
+    /**
+     * 批量更新预约金额
+     * @param amount 预约金额
+     * @return 更新的记录数
+     */
+    int batchUpdateAmount(BigDecimal amount);
+
+    /**
+     * 获取医生的预约列表
+     * @param doctorId 医生ID
+     * @return 预约列表
+     */
+    List<AppointmentDTO> getDoctorAppointments(String doctorId);
 }

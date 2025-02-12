@@ -31,6 +31,11 @@ public class PrescriptionDTO {
     private String doctorId;
     
     /**
+     * 医生姓名
+     */
+    private String doctorName;
+    
+    /**
      * 患者ID
      */
     private String patientId;
@@ -54,6 +59,11 @@ public class PrescriptionDTO {
      * 注意事项
      */
     private String instructions;
+
+    /**
+     * 注意事项（用于接收前端传入的notes字段）
+     */
+    private String notes;
     
     /**
      * 状态：PENDING-待支付，PAID-已支付，DISPENSED-已发药，COMPLETED-已完成

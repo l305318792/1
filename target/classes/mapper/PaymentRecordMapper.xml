@@ -57,17 +57,17 @@
     <update id="updateById" parameterType="com.yunchuan.medical.entity.PaymentRecord">
         UPDATE payment_record
         <set>
-            <if test="userId != null">user_id = #{userId},</if>
-            <if test="businessId != null">business_id = #{businessId},</if>
-            <if test="businessType != null">business_type = #{businessType},</if>
-            <if test="amount != null">amount = #{amount},</if>
-            <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
-            <if test="paymentTime != null">payment_time = #{paymentTime},</if>
-            <if test="status != null">status = #{status},</if>
-            <if test="remark != null">remark = #{remark},</if>
-            <if test="updateTime != null">update_time = #{updateTime}</if>
+            <if test="et.userId != null">user_id = #{et.userId},</if>
+            <if test="et.businessId != null">business_id = #{et.businessId},</if>
+            <if test="et.businessType != null">business_type = #{et.businessType},</if>
+            <if test="et.amount != null">amount = #{et.amount},</if>
+            <if test="et.paymentMethod != null">payment_method = #{et.paymentMethod},</if>
+            <if test="et.paymentTime != null">payment_time = #{et.paymentTime},</if>
+            <if test="et.status != null">status = #{et.status},</if>
+            <if test="et.remark != null">remark = #{et.remark},</if>
+            <if test="et.updateTime != null">update_time = #{et.updateTime}</if>
         </set>
-        WHERE id = #{id}
+        WHERE id = #{et.id}
     </update>
 
     <delete id="deleteById">

@@ -76,6 +76,12 @@ public class Doctor implements Serializable {
     private String introduction;
 
     /**
+     * 头像
+     */
+    @TableField("avatar")
+    private String avatar;
+
+    /**
      * 问诊费用
      */
     @TableField("consultation_fee")
@@ -115,11 +121,11 @@ public class Doctor implements Serializable {
      * 创建时间
      */
     @TableField(value = "create_time", fill = FieldFill.INSERT)
-    private LocalDateTime createTime = LocalDateTime.now();
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime = LocalDateTime.now();
+    private LocalDateTime updateTime;
 }

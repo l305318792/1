@@ -1,901 +1,371 @@
-# 运城市移动医疗咨询平台 API 文档
+# 运城市移动医疗咨询平台 API文档
 
-## 目录
-- [1. 概述](#1-概述)
-- [2. 公共说明](#2-公共说明)
-- [3. 接口列表](#3-接口列表)
+## 基础信息
+- 基础URL: `http://localhost:8080`
+- 认证方式: Bearer Token
 
-## 1. 概述
+## 1. 用户认证
 
-本文档详细说明运城市移动医疗咨询平台的后端接口规范。
-
-## 2. 公共说明
-
-### 2.1 接口认证
-- 除了登录和公共接口外，所有接口都需要在header中携带token
-- 格式：`Authorization: Bearer_${token}`
-
-### 2.2 响应格式
-```json
-{
-    "code": 200,          // 状态码：200成功，400错误，500系统异常
-    "message": "success", // 响应消息
-    "data": {}           // 响应数据
-}
-```
-
-## 3. 接口列表
-
-### 3.1 认证模块
-
-#### 3.1.1 用户登录
-- 请求路径：`/auth/login`
+### 1.1 用户登录
+- 请求路径：`/api/auth/login`
 - 请求方法：POST
 - 请求参数：
 ```json
 {
-    "username": "admin",
+    "username": "doctor1",
     "password": "123456"
 }
 ```
-- 响应数据：
+- 返回示例：
 ```json
 {
     "code": 200,
-    "message": "操作成功",
+    "message": "success",
     "data": {
-        "token": "xxx",
-        "userId": "1",
-        "username": "admin",
-        "name": "管理员",
-        "role": "ADMIN",
-        "doctorId": null
+        "token": "eyJhbGciOiJIUzI1NiJ9..."
     }
 }
 ```
 
-### 3.2 管理员模块
+## 2. 医生管理
 
-#### 3.2.1 用户管理
-
-##### 获取用户列表
-- 请求路径：`/admin/users`
+### 2.1 获取医生列表
+- 请求路径：`/doctor/list`
 - 请求方法：GET
-- 请求头：`Authorization: Bearer_admin`
-- 响应数据：
+- 请求头：`Authorization: Bearer {token}`
+- 返回示例：
+```json
+{
+    "code": 200,
+    "message": "success",
+    "data": [
+        {
+            "id": "doc1",
+            "name": "张医生",
+            "departmentId": "1",
+            "departmentName": "内科",
+            "title": "主任医师",
+            "specialty": "内科疾病",
+            "consultationFee": 50,
+            "rating": 4.8
+        }
+    ]
+}
+```
+
+## 3. 排班管理
+
+### 3.1 获取医生排班
+- 请求路径：`/api/admin/schedules`
+- 请求方法：GET
+- 请求头：`Authorization: Bearer {token}`
+- 返回示例：
 ```json
 {
     "code": 200,
     "message": "操作成功",
-    "data": {
-        "total": 10,
-        "list": [
-            {
-                "id": "1",
-                "username": "zhangsan",
-                "name": "张三",
-                "role": "USER",
-                "status": "normal",
-                "createTime": "2024-01-01 10:00:00"
-            }
-        ]
-    }
+    "data": [
+        {
+            "id": "b79d78c809ce45d18be948894a909a59",
+            "doctorId": "4",
+            "doctorName": "张医生",
+            "departmentId": "1",
+            "departmentName": "内科",
+            "scheduleDate": "2025-02-04",
+            "period": "MORNING",
+            "maxAppointments": 10,
+            "appointedCount": 0,
+            "status": "1",
+            "remark": "上午门诊"
+        }
+    ]
 }
 ```
 
-##### 创建用户
-- 请求路径：`/admin/users`
+## 4. 预约管理
+
+### 4.1 创建预约
+- 请求路径：`/appointment`
 - 请求方法：POST
-- 请求头：`Authorization: Bearer_admin`
+- 请求头：`Authorization: Bearer {token}`
 - 请求参数：
 ```json
 {
-    "username": "zhangsan",
-    "password": "123456",
-    "name": "张三",
-    "role": "USER"
-}
-```
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "id": "1",
-        "username": "zhangsan",
-        "name": "张三",
-        "role": "USER",
-        "status": "normal",
-        "createTime": "2024-01-01 10:00:00"
-    }
-}
-```
-
-#### 3.2.2 部门管理
-
-##### 获取部门列表
-- 请求路径：`/admin/departments`
-- 请求方法：GET
-- 请求头：`Authorization: Bearer_admin`
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "total": 3,
-        "list": [
-            {
-                "id": "1",
-                "name": "内科",
-                "description": "主要处理内脏疾病",
-                "status": "normal",
-                "doctorCount": 5,
-                "consultationCount": 100,
-                "createTime": "2024-01-01 10:00:00"
-            }
-        ]
-    }
-}
-```
-
-##### 创建部门
-- 请求路径：`/admin/departments`
-- 请求方法：POST
-- 请求头：`Authorization: Bearer_admin`
-- 请求参数：
-```json
-{
-    "name": "内科",
-    "description": "主要处理内脏疾病"
-}
-```
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "id": "1",
-        "name": "内科",
-        "description": "主要处理内脏疾病",
-        "status": "normal",
-        "createTime": "2024-01-01 10:00:00"
-    }
-}
-```
-
-#### 3.2.3 医生管理
-
-##### 获取医生列表
-- 请求路径：`/admin/doctors`
-- 请求方法：GET
-- 请求头：`Authorization: Bearer_admin`
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "total": 5,
-        "list": [
-            {
-                "id": "1",
-                "name": "张医生",
-                "departmentId": "1",
-                "departmentName": "内科",
-                "title": "主任医师",
-                "specialty": "消化系统疾病",
-                "introduction": "从医20年，擅长...",
-                "consultationCount": 1000,
-                "rating": 4.8,
-                "status": "normal",
-                "createTime": "2024-01-01 10:00:00"
-            }
-        ]
-    }
-}
-```
-
-### 3.3 医生模块
-
-#### 3.3.1 问诊管理
-
-##### 获取问诊列表
-- 请求路径：`/doctor/consultations`
-- 请求方法：GET
-- 请求头：`Authorization: Bearer_doctor1`
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "total": 2,
-        "list": [
-            {
-                "id": "1",
-                "userId": "u1",
-                "userName": "张三",
-                "symptoms": "反复头痛，持续一周",
-                "status": "PENDING",
-                "createTime": "2024-01-01 10:00:00"
-            }
-        ]
-    }
-}
-```
-
-##### 开始问诊
-- 请求路径：`/doctor/consultations/{id}/start`
-- 请求方法：PUT
-- 请求头：`Authorization: Bearer_doctor1`
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "id": "1",
-        "status": "IN_PROGRESS",
-        "startTime": "2024-01-01 10:30:00"
-    }
-}
-```
-
-##### 完成问诊
-- 请求路径：`/doctor/consultations/{id}/complete`
-- 请求方法：PUT
-- 请求头：`Authorization: Bearer_doctor1`
-- 请求参数：
-```json
-{
-    "diagnosis": "偏头痛",
-    "treatment": "建议服用..."
-}
-```
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "id": "1",
-        "status": "COMPLETED",
-        "endTime": "2024-01-01 11:00:00"
-    }
-}
-```
-
-### 3.4 患者模块
-
-#### 3.4.1 预约管理
-
-##### 创建预约
-- 请求路径：`/patient/appointments`
-- 请求方法：POST
-- 请求头：`Authorization: Bearer_patient1`
-- 请求参数：
-```json
-{
-    "doctorId": "1",
+    "doctorId": "4",
     "departmentId": "1",
-    "scheduleId": "1",
-    "symptoms": "反复头痛，持续一周"
+    "scheduleId": "b79d78c809ce45d18be948894a909a59",
+    "appointmentTime": "2025-02-04T09:00:00"
 }
 ```
-- 响应数据：
+- 返回示例：
 ```json
 {
     "code": 200,
     "message": "操作成功",
     "data": {
-        "id": "1",
-        "status": "PENDING",
-        "createTime": "2024-01-01 10:00:00"
+        "id": "1886098140035559425",
+        "status": "UNPAID",
+        "doctorName": "张医生",
+        "departmentName": "内科"
     }
 }
 ```
 
-##### 获取预约列表
-- 请求路径：`/patient/appointments`
-- 请求方法：GET
-- 请求头：`Authorization: Bearer_patient1`
-- 响应数据：
+### 4.2 支付预约
+- 请求路径：`/appointment/{appointmentId}/pay`
+- 请求方法：POST
+- 请求头：`Authorization: Bearer {token}`
+- 返回示例：
 ```json
 {
     "code": 200,
     "message": "操作成功",
     "data": {
-        "total": 2,
-        "list": [
-            {
-                "id": "1",
-                "doctorId": "1",
-                "doctorName": "张医生",
-                "departmentId": "1",
-                "departmentName": "内科",
-                "symptoms": "反复头痛，持续一周",
-                "status": "PENDING",
-                "createTime": "2024-01-01 10:00:00"
-            }
-        ]
+        "id": "1886098140035559425",
+        "status": "PAID"
     }
 }
 ```
 
-### 3.5 公共模块
+### 4.3 取消预约
+- 请求路径：`/appointment/{appointmentId}/cancel`
+- 请求方法：POST
+- 请求头：`Authorization: Bearer {token}`
+- 请求参数：
+```json
+{
+    "reason": "个人原因"
+}
+```
+- 返回示例：
+```json
+{
+    "code": 200,
+    "message": "操作成功",
+    "data": {
+        "id": "1886642419493511169",
+        "status": "CANCELLED"
+    }
+}
+```
 
-#### 3.5.1 获取部门下拉列表
-- 请求路径：`/common/departments/select`
+### 4.4 完成预约
+- 请求路径：`/appointment/{appointmentId}/complete`
+- 请求方法：POST
+- 请求头：`Authorization: Bearer {token}`
+- 返回示例：
+```json
+{
+    "code": 200,
+    "message": "操作成功",
+    "data": {
+        "id": "1886643400818040834",
+        "status": "COMPLETED"
+    }
+}
+```
+
+### 4.5 获取我的预约列表
+- 请求路径：`/appointment/my`
 - 请求方法：GET
-- 响应数据：
+- 请求头：`Authorization: Bearer {token}`
+- 返回示例：
 ```json
 {
     "code": 200,
     "message": "操作成功",
     "data": [
         {
-            "label": "内科",
-            "value": "1"
-        },
-        {
-            "label": "外科",
-            "value": "2"
+            "id": "1886643400818040834",
+            "doctorName": "张医生",
+            "departmentName": "内科",
+            "appointmentTime": "2025-02-04T14:00:00",
+            "status": "COMPLETED"
         }
     ]
 }
 ```
 
-#### 3.5.2 获取医生下拉列表
-- 请求路径：`/common/doctors/select`
+## 5. 问诊管理
+
+### 5.1 创建问诊
+- 请求路径：`/patient/consultations`
+- 请求方法：POST
+- 请求头：`Authorization: Bearer {token}`
+- 请求参数：
+```json
+{
+    "doctorId": "4",
+    "departmentId": "1",
+    "symptoms": "头痛，发烧38度"
+}
+```
+- 返回示例：
+```json
+{
+    "code": 200,
+    "message": "操作成功",
+    "data": {
+        "id": "e0ecf5d55ef24d3ea1d4e7b12b667c08",
+        "userName": "张三",
+        "status": "PENDING"
+    }
+}
+```
+
+### 5.2 获取我的问诊列表
+- 请求路径：`/patient/consultations/my`
 - 请求方法：GET
-- 请求参数：`departmentId=1`
-- 响应数据：
+- 请求头：`Authorization: Bearer {token}`
+- 返回示例：
 ```json
 {
     "code": 200,
     "message": "操作成功",
     "data": [
         {
-            "label": "张医生",
-            "value": "1"
-        },
-        {
-            "label": "李医生",
-            "value": "2"
+            "id": "e0ecf5d55ef24d3ea1d4e7b12b667c08",
+            "userName": "张三",
+            "doctorName": "张医生",
+            "symptoms": "头痛，发烧38度",
+            "status": "PENDING"
         }
     ]
 }
 ```
 
-### 3.6 系统管理模块
+## 6. 评价管理
 
-#### 3.6.1 系统日志管理
-
-##### 获取日志列表
-- 请求路径：`/admin/logs`
-- 请求方法：GET
-- 请求头：`Authorization: Bearer_admin`
+### 6.1 创建医生评价
+- 请求路径：`/doctor-rating`
+- 请求方法：POST
+- 请求头：`Authorization: Bearer {token}`
 - 请求参数：
-  - username: 用户名
-  - operationType: 操作类型(LOGIN/LOGOUT)
-  - status: 状态(SUCCESS/FAIL)
-- 响应数据：
+```json
+{
+    "appointmentId": "1886643400818040834",
+    "serviceAttitude": 5.0,
+    "medicalSkill": 5.0,
+    "medicalEffect": 4.5,
+    "comment": "医生很专业，服务态度很好，治疗效果不错"
+}
+```
+- 返回示例：
 ```json
 {
     "code": 200,
     "message": "操作成功",
     "data": {
-        "total": 10,
-        "list": [
-            {
-                "id": "1",
-                "userId": "1",
-                "username": "admin",
-                "operationType": "LOGIN",
-                "description": "用户登录",
-                "module": "认证模块",
-                "ip": "127.0.0.1",
-                "status": "SUCCESS",
-                "createTime": "2024-01-01 10:00:00"
-            }
-        ]
+        "id": "f07981e1-bc94-4a15-bec0-873844a74e62",
+        "doctorName": "张医",
+        "userName": "张三"
     }
 }
 ```
 
-#### 3.6.2 系统配置管理
-
-##### 获取配置列表
-- 请求路径：`/admin/configs`
+### 6.2 获取医生评价列表
+- 请求路径：`/doctor-rating/doctor/{doctorId}`
 - 请求方法：GET
-- 请求头：`Authorization: Bearer_admin`
-- 响应数据：
+- 请求头：`Authorization: Bearer {token}`
+- 返回示例：
 ```json
 {
     "code": 200,
     "message": "操作成功",
-    "data": {
-        "total": 5,
-        "list": [
-            {
-                "id": "1",
-                "configKey": "system.name",
-                "configValue": "运城市移动医疗咨询平台",
-                "description": "系统名称",
-                "type": "text",
-                "editable": true,
-                "createTime": "2024-01-01 10:00:00"
-            }
-        ]
-    }
+    "data": [
+        {
+            "id": "f07981e1-bc94-4a15-bec0-873844a74e62",
+            "doctorName": "张医",
+            "userName": "张三",
+            "serviceAttitude": 5,
+            "medicalSkill": 5,
+            "medicalEffect": 5,
+            "comment": "医生很专业，服务态度很好，治疗效果不错"
+        }
+    ]
 }
 ```
 
-##### 更新配置
-- 请求路径：`/admin/configs/{id}`
+### 6.3 获取我的评价列表
+- 请求路径：`/doctor-rating/my`
+- 请求方法：GET
+- 请求头：`Authorization: Bearer {token}`
+- 返回示例：
+```json
+{
+    "code": 200,
+    "message": "操作成功",
+    "data": [
+        {
+            "id": "f07981e1-bc94-4a15-bec0-873844a74e62",
+            "doctorName": "张医",
+            "serviceAttitude": 5,
+            "medicalSkill": 5,
+            "medicalEffect": 5,
+            "comment": "医生很专业，服务态度很好，治疗效果不错"
+        }
+    ]
+}
+```
+
+## 7. 个人信息管理
+
+### 7.1 更新个人信息
+- 请求路径：`/patient/profile`
 - 请求方法：PUT
-- 请求头：`Authorization: Bearer_admin`
+- 请求头：`Authorization: Bearer {token}`
 - 请求参数：
 ```json
 {
-    "configValue": "新的系统名称"
+    "name": "张三",
+    "phone": "13800000003",
+    "email": "zhangsan@example.com"
 }
 ```
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": null
-}
-```
-
-### 3.7 评价管理
-
-#### 3.7.1 医生评价
-
-##### 创建评价
-- 请求路径：`/patient/doctors/{doctorId}/ratings`
-- 请求方法：POST
-- 请求头：`Authorization: Bearer_patient1`
-- 请求参数：
-```json
-{
-    "consultationId": "1",
-    "rating": 5,
-    "content": "医生很专业,态度很好"
-}
-```
-- 响应数据：
+- 返回示例：
 ```json
 {
     "code": 200,
     "message": "操作成功",
     "data": {
-        "id": "1",
-        "createTime": "2024-01-01 10:00:00"
+        "id": "u4",
+        "username": "patient1",
+        "name": "张三",
+        "phone": "13800000003",
+        "email": "zhangsan@example.com"
     }
 }
 ```
 
-##### 获取医生评价列表
-- 请求路径：`/doctor/ratings`
-- 请求方法：GET
-- 请求头：`Authorization: Bearer_doctor1`
-- 响应数据：
+## 8. 注意事项
+
+1. 所有需要认证的接口都需要在请求头中携带token：
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+```
+
+2. 错误响应格式：
 ```json
 {
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "total": 10,
-        "list": [
-            {
-                "id": "1",
-                "userId": "u1",
-                "userName": "张三",
-                "consultationId": "1",
-                "rating": 5,
-                "content": "医生很专业,态度很好",
-                "status": "normal",
-                "createTime": "2024-01-01 10:00:00"
-            }
-        ]
-    }
+    "code": 400,
+    "message": "错误信息"
 }
 ```
 
-### 3.8 支付管理
+3. 分页参数说明：
+- current: 从1开始的页码
+- size: 每页记录数，默认10
 
-#### 3.8.1 支付记录
+## 9. 测试账号
 
-##### 创建支付订单
-- 请求路径：`/patient/payments`
-- 请求方法：POST
-- 请求头：`Authorization: Bearer_patient1`
-- 请求参数：
-```json
-{
-    "orderType": "CONSULTATION",
-    "orderId": "1",
-    "amount": 100,
-    "paymentMethod": "WECHAT"
-}
-```
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "id": "1",
-        "status": "PENDING",
-        "createTime": "2024-01-01 10:00:00"
-    }
-}
-```
+### 9.1 医生账号
+- 用户名：doctor1
+- 密码：123456
 
-##### 获取支付记录列表
-- 请求路径：`/patient/payments`
-- 请求方法：GET
-- 请求头：`Authorization: Bearer_patient1`
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "total": 5,
-        "list": [
-            {
-                "id": "1",
-                "orderType": "CONSULTATION",
-                "orderId": "1",
-                "amount": 100,
-                "status": "SUCCESS",
-                "paymentMethod": "WECHAT",
-                "createTime": "2024-01-01 10:00:00",
-                "payTime": "2024-01-01 10:01:00"
-            }
-        ]
-    }
-}
-```
+### 9.2 患者账号
+- 用户名：patient1
+- 密码：123456
 
-### 3.9 健康资讯
-
-#### 3.9.1 资讯管理
-
-##### 获取资讯列表
-- 请求路径：`/common/articles`
-- 请求方法：GET
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "total": 10,
-        "list": [
-            {
-                "id": "1",
-                "title": "如何预防感冒",
-                "summary": "冬季来临,预防感冒很重要...",
-                "author": "张医生",
-                "viewCount": 1000,
-                "status": "published",
-                "createTime": "2024-01-01 10:00:00"
-            }
-        ]
-    }
-}
-```
-
-##### 获取资讯详情
-- 请求路径：`/common/articles/{id}`
-- 请求方法：GET
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "id": "1",
-        "title": "如何预防感冒",
-        "content": "1. 注意保暖...",
-        "author": "张医生",
-        "viewCount": 1000,
-        "status": "published",
-        "createTime": "2024-01-01 10:00:00"
-    }
-}
-```
-
-### 3.10 数据备份/恢复
-
-#### 3.10.1 备份管理
-
-##### 获取备份列表
-- 请求路径：`/admin/backups`
-- 请求方法：GET
-- 请求头：`Authorization: Bearer_admin`
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "total": 5,
-        "list": [
-            {
-                "id": "1",
-                "fileName": "backup_20240101.sql",
-                "fileSize": "1.5MB",
-                "type": "AUTO",
-                "description": "系统自动备份",
-                "status": "SUCCESS",
-                "createTime": "2024-01-01 00:00:00"
-            }
-        ]
-    }
-}
-```
-
-##### 创建备份
-- 请求路径：`/admin/backups`
-- 请求方法：POST
-- 请求头：`Authorization: Bearer_admin`
-- 请求参数：
-```json
-{
-    "description": "手动备份"
-}
-```
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "id": "1",
-        "status": "SUCCESS",
-        "createTime": "2024-01-01 10:00:00"
-    }
-}
-```
-
-##### 恢复数据
-- 请求路径：`/admin/backups/{id}/restore`
-- 请求方法：POST
-- 请求头：`Authorization: Bearer_admin`
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": null
-}
-```
-
-##### 删除备份
-- 请求路径：`/admin/backups/{id}`
-- 请求方法：DELETE
-- 请求头：`Authorization: Bearer_admin`
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": null
-}
-```
-
-### 3.11 医生排班管理
-
-#### 3.11.1 排班管理
-
-##### 获取排班列表
-- 请求路径：`/admin/schedules`
-- 请求方法：GET
-- 请求头：`Authorization: Bearer_admin`
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "total": 10,
-        "list": [
-            {
-                "id": "1",
-                "doctorId": "1",
-                "doctorName": "张医生",
-                "departmentId": "1",
-                "departmentName": "内科",
-                "scheduleDate": "2024-01-01",
-                "period": "MORNING",
-                "maxAppointments": 20,
-                "appointedCount": 5,
-                "status": "normal",
-                "createTime": "2024-01-01 10:00:00"
-            }
-        ]
-    }
-}
-```
-
-##### 创建排班
-- 请求路径：`/admin/schedules`
-- 请求方法：POST
-- 请求头：`Authorization: Bearer_admin`
-- 请求参数：
-```json
-{
-    "doctorId": "1",
-    "scheduleDate": "2024-01-01",
-    "period": "MORNING",
-    "maxAppointments": 20
-}
-```
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "id": "1",
-        "createTime": "2024-01-01 10:00:00"
-    }
-}
-```
-
-##### 更新排班
-- 请求路径：`/admin/schedules/{id}`
-- 请求方法：PUT
-- 请求头：`Authorization: Bearer_admin`
-- 请求参数：
-```json
-{
-    "maxAppointments": 30,
-    "status": "normal"
-}
-```
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": null
-}
-```
-
-##### 删除排班
-- 请求路径：`/admin/schedules/{id}`
-- 请求方法：DELETE
-- 请求头：`Authorization: Bearer_admin`
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": null
-}
-```
-
-### 3.12 统计分析
-
-#### 3.12.1 医生工作统计
-
-##### 获取医生工作统计
-- 请求路径：`/doctor/statistics`
-- 请求方法：GET
-- 请求头：`Authorization: Bearer_doctor1`
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "totalConsultations": 1000,
-        "completedConsultations": 800,
-        "pendingConsultations": 10,
-        "cancelledConsultations": 190,
-        "monthlyStats": {
-            "total": 100,
-            "completed": 80,
-            "pending": 10,
-            "cancelled": 10
-        },
-        "satisfactionStats": {
-            "averageRating": 4.8,
-            "ratingCounts": {
-                "5": 800,
-                "4": 150,
-                "3": 40,
-                "2": 8,
-                "1": 2
-            }
-        },
-        "dailyConsultations": [
-            {"date": "2024-01-01", "count": 10},
-            {"date": "2024-01-02", "count": 12},
-            {"date": "2024-01-03", "count": 8}
-        ]
-    }
-}
-```
-
-#### 3.12.2 预约统计
-
-##### 获取预约统计
-- 请求路径：`/admin/appointments/statistics`
-- 请求方法：GET
-- 请求头：`Authorization: Bearer_admin`
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "totalAppointments": 1000,
-        "completedAppointments": 800,
-        "pendingAppointments": 100,
-        "cancelledAppointments": 100,
-        "departmentStats": [
-            {
-                "departmentId": "1",
-                "departmentName": "内科",
-                "total": 500,
-                "completed": 400
-            }
-        ],
-        "doctorStats": [
-            {
-                "doctorId": "1",
-                "doctorName": "张医生",
-                "total": 300,
-                "completed": 250
-            }
-        ],
-        "dailyStats": [
-            {"date": "2024-01-01", "count": 50},
-            {"date": "2024-01-02", "count": 45},
-            {"date": "2024-01-03", "count": 55}
-        ]
-    }
-}
-```
-
-#### 3.12.3 收入统计
-
-##### 获取收入统计
-- 请求路径：`/admin/payments/statistics`
-- 请求方法：GET
-- 请求头：`Authorization: Bearer_admin`
-- 响应数据：
-```json
-{
-    "code": 200,
-    "message": "操作成功",
-    "data": {
-        "totalIncome": 100000,
-        "monthlyIncome": 10000,
-        "dailyIncome": 1000,
-        "paymentMethodStats": {
-            "WECHAT": 60000,
-            "ALIPAY": 40000
-        },
-        "monthlyStats": [
-            {"month": "2024-01", "amount": 10000},
-            {"month": "2024-02", "amount": 12000}
-        ],
-        "dailyStats": [
-            {"date": "2024-01-01", "amount": 1000},
-            {"date": "2024-01-02", "amount": 1200}
-        ]
-    }
-}
-``` 
+### 9.3 管理员账号
+- 用户名：admin
+- 密码：123456 

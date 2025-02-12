@@ -7,6 +7,7 @@ import com.yunchuan.medical.service.ScheduleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,6 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import jakarta.validation.Valid;
+import com.yunchuan.medical.dto.ScheduleFormDTO;
+import com.yunchuan.medical.entity.Schedule;
+import com.yunchuan.medical.dto.BatchScheduleDTO;
 
 /**
  * 医生排班控制器
@@ -45,19 +50,23 @@ public class DoctorScheduleController {
         return Result.success(scheduleService.getScheduleById(id));
     }
 
+    @Operation(summary = "创建排班")
+    @PostMapping
+    public Result<ScheduleDTO> createSchedule(@RequestBody @Valid ScheduleFormDTO formDTO) {
+        Schedule schedule = new Schedule();
+        BeanUtils.copyProperties(formDTO, schedule);
+        return Result.success(scheduleService.createSchedule(schedule));
+    }
+
     @Operation(summary = "更新排班信息")
     @PutMapping("/{id}")
     public Result<ScheduleDTO> updateSchedule(
             @PathVariable String id,
             @RequestBody ScheduleDTO scheduleDTO) {
-        // 模拟更新排班
-        scheduleDTO.setId(id);
-        scheduleDTO.setDoctorId("1");
-        scheduleDTO.setDoctorName("张医生");
-        scheduleDTO.setDepartmentId("1");
-        scheduleDTO.setDepartmentName("内科");
-        scheduleDTO.setUpdateTime(LocalDateTime.now());
-        return Result.success(scheduleDTO);
+        Schedule schedule = new Schedule();
+        BeanUtils.copyProperties(scheduleDTO, schedule);
+        schedule.setId(id);
+        return Result.success(scheduleService.updateSchedule(schedule));
     }
 
     @Operation(summary = "获取待处理问诊列表")
@@ -139,5 +148,26 @@ public class DoctorScheduleController {
         statistics.put("dailyStats", dailyStats);
         
         return Result.success(statistics);
+    }
+
+    @Operation(summary = "批量创建排班")
+    @PostMapping("/batchAdd")
+    public Result<Void> batchAddSchedule(@RequestBody @Valid BatchScheduleDTO batchDTO) {
+        scheduleService.batchAddSchedule(batchDTO);
+        return Result.success();
+    }
+
+    @Operation(summary = "批量更新排班")
+    @PutMapping("/batch")
+    public Result<Void> batchUpdateSchedule(@RequestBody @Valid BatchScheduleDTO batchDTO) {
+        scheduleService.batchUpdateSchedule(batchDTO);
+        return Result.success();
+    }
+
+    @Operation(summary = "批量删除排班")
+    @DeleteMapping("/batch")
+    public Result<Void> batchDeleteSchedule(@RequestBody List<String> ids) {
+        scheduleService.batchDeleteSchedule(ids);
+        return Result.success();
     }
 } 

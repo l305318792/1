@@ -71,4 +71,22 @@ public class PaymentController {
     public Result<List<PaymentRecordDTO>> getAllPayments() {
         return Result.ok(paymentService.getAllPayments());
     }
+
+    /**
+     * 获取待支付记录列表
+     */
+    @Operation(summary = "获取待支付记录列表")
+    @GetMapping("/pending")
+    public Result<List<PaymentRecordDTO>> getPendingPayments(@RequestParam(required = false) String userId) {
+        return Result.ok(paymentService.getPaymentsByStatus(userId, "PENDING"));
+    }
+
+    /**
+     * 获取已支付记录列表
+     */
+    @Operation(summary = "获取已支付记录列表")
+    @GetMapping("/paid")
+    public Result<List<PaymentRecordDTO>> getPaidPayments(@RequestParam(required = false) String userId) {
+        return Result.ok(paymentService.getPaymentsByStatus(userId, "SUCCESS"));
+    }
 } 

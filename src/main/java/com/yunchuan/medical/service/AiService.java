@@ -6,7 +6,9 @@ package com.yunchuan.medical.service;
 public interface AiService {
     
     /**
-     * 获取AI回复
+     * 生成内容
+     * @param prompt 提示词
+     * @return 生成的内容
      */
-    String getAiReply(String content);
-} 
+    String generateContent(String prompt);
+}
